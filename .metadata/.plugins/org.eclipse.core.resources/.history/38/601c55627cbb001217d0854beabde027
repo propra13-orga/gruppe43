@@ -1,0 +1,42 @@
+package com.github.propra13.gruppe43;
+
+import java.awt.image.BufferedImage;
+
+public class Player extends Actor{
+	
+	
+	public Player() {
+		
+	}
+	//erhöht energy, wenn ENERGY_MAX erreicht ist, wird energy verwendet um eine Handlung auszuführen
+	public void act() {
+		if (energy < ENERGY_MAX) {
+			energy+=energyGain;
+		}
+		else {
+			switch (currentAction) {
+			case Actor.MOVE:
+				if ((movex != 0 || movey != 0)) {
+				if (this.move(this.field.level.getField(this.field.x+movex, this.field.y+movey))) energy=(int) (ENERGY_MAX*0.9);
+				}
+				break;
+			}
+		}
+		
+	}
+	
+	
+	public boolean move(Field t) {
+		if (!t.isOccupied() && t.isWalkable() &&  this.field.x+movex < this.field.level.size_x && this.field.y+movey < this.field.level.size_y && t.field.x >=0 && t.field.y >=0) {
+			t.actor = this;
+			if (field != null) {
+			field.actor = null;
+			}
+			this.field = t;
+			return true;
+					
+		}
+		return false;
+	}
+
+}

@@ -1,0 +1,6 @@
+package com.github.propra13.gruppe43;
+
+public interface Actor {
+	
+	
+}

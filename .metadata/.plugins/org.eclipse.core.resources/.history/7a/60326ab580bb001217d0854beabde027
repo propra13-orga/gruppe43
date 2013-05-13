@@ -1,0 +1,35 @@
+package com.github.propra13.gruppe43;
+
+public class Game {
+	//Levels des Spiels, und der Index des momentan aktiven Levels
+	int currentLevelId = 0;
+	Level[] levels;
+	//Figur des Spielers
+	Player player;
+	
+	
+	public Game() {
+		player = new Player();
+		levels = new Level[3];
+		levels[0] = new Level();
+		levels[1] = new Level();
+		levels[2] = new Level();
+		levels[0].init("level1.txt");
+		levels[1].init("level2.txt");
+		levels[2].init("level3.txt");
+		levels[0].game = this;
+		levels[1].game = this;
+		levels[2].game = this;
+		player.move(levels[0].getField(15, 3));
+		
+		
+	}
+	
+	
+	//führt den nächsten Schritt des Spiels aus;
+	public void gameUpdate() {
+		player.act();
+		
+	}
+
+}

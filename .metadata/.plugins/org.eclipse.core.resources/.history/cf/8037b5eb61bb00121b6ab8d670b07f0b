@@ -1,0 +1,10 @@
+package com.github.propra13.gruppe43;
+
+public class Game {
+	
+	
+	public Game() {
+		
+	}
+
+}

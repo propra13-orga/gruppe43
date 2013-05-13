@@ -1,0 +1,14 @@
+package com.github.propra13.gruppe43;
+
+public class Game {
+	Level currentLevel = null;
+	Level[] levels = new Level[3];
+	//Figur des Spielers
+	Player player;
+	
+	
+	public Game() {
+		
+	}
+
+}

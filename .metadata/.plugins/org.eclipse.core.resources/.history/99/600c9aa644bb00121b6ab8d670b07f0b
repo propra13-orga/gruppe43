@@ -1,0 +1,37 @@
+package com.github.propra13.gruppe43;
+import java.awt.image.*;
+import java.util.*;
+public class Actor{
+	// energy wird benötigt um zu handeln
+	final int ENERGY_MAX = 1000;
+	public int energy = ENERGY_MAX;
+	public int energyGain = ENERGY_MAX / 100;
+	// Aktion, die ausgeführt wird
+	public int currentAction = Actor.MOVE;
+	//Aktionen
+	final int MOVE = 0;
+	
+	//Feld auf dem sich Actor befindet
+	Field field = null;
+	
+	public Unit() {
+	}
+
+	public void move(Field t) {
+		if (!t.isOccupied() ) {
+			t.unit = this;
+			if (field != null) {
+			field.unit = null;
+			}
+			this.field = t;
+					
+		}
+		
+	}
+	
+	public void act() {
+		
+	}
+	
+
+}

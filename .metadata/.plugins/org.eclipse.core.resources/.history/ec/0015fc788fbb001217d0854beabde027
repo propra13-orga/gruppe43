@@ -1,0 +1,78 @@
+package com.github.propra13.gruppe43;
+
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.*;
+
+import javax.imageio.ImageIO;
+
+
+public class Level {
+	//Größe des Levels
+	int size_x, size_y;
+	//Felder des Levels
+	ArrayList<ArrayList<Field>> fields;
+	//Game zu dem dieses Level gehört
+	Game game = null;
+	
+	
+	public Level() {
+		fields = new ArrayList<ArrayList<Field>>();
+	}
+	
+	
+	//liest ein Level aus einer Textdatei mit dem Pfad "path" ein und speichert dieses in dem Array fields
+	public boolean init(String path) {
+		String s;
+		String imgpath = "wall.jpg";
+		BufferedImage img;
+		int c = 0;
+		Scanner scanner = null;
+		
+		try {
+			scanner = new Scanner(new File(path));
+			do {
+				s = scanner.nextLine();
+				for (int i = 0; i<s.length(); i++) {
+					if (c==0) fields.add(new ArrayList<Field>());
+					
+					fields.get(i).add(new Field(s.charAt(i)));
+					fields.get(i).get(c).setxy(i, c);	
+					fields.get(i).get(c).level = this;
+				}
+				c++;		
+
+			} while (scanner.hasNextLine());
+			size_x = fields.size();
+			size_y = fields.get(0).size();
+			return true;
+			
+			
+			
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("file not found");
+			return false;
+		} finally {
+			scanner.close();
+		}
+		
+		
+
+	}
+	// gibt das Feld des Levels mit den Koordinaten x,y zurück
+	public Field getField(int x, int y) {
+		if (x<size_x && y<size_y) {
+			return fields.get(x).get(y);
+		}
+		else {
+			return null;
+		}
+	}
+	//wird aufgerufen, wenn dieses Feld betreten wird
+	public void onEntry() {
+		
+	}
+	
+
+}

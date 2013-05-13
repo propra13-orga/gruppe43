@@ -1,0 +1,22 @@
+package com.github.propra13.gruppe43;
+import java.awt.image.*;
+import java.util.*;
+public class Unit{
+	//Feld auf dem sich der unitr befindet
+	Field field;
+	
+	public Unit() {
+	}
+
+	public void move(Field t) {
+		if (!t.isOccupied()) {
+			t.unit = this;
+			field.unit = null;
+			this.field = t;
+					
+		}
+		
+	}
+	
+
+}

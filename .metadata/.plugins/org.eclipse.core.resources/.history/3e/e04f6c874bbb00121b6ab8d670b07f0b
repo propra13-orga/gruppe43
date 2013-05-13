@@ -1,0 +1,91 @@
+package com.github.propra13.gruppe43;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.*;
+
+public class TestFrame extends JFrame{
+	
+	public void init() {
+		Timer timer;
+
+		final LevelShower panel = new LevelShower();
+		panel.init();
+		ActionListener herbert = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				panel.player.act();
+				repaint();
+				
+			}
+			
+		};
+		timer = new Timer(10, herbert);
+		this.addKeyListener(new KeyListener() {
+			boolean[] keypress = new boolean[4];
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				int b = arg0.getKeyCode();
+				if (!keypress[0] && b == KeyEvent.VK_W) panel.player.movey-=1;
+				if (!keypress[1] && b == KeyEvent.VK_A) panel.player.movey-=1;
+				if (!keypress[2] && b == KeyEvent.VK_S) panel.player.movey-=1;
+				if (!keypress[3] && b == KeyEvent.VK_D) panel.player.movey-=1;
+				
+			
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				if (keypress) {
+				switch (arg0.getKeyCode())  {
+				case KeyEvent.VK_W:
+					panel.player.movey+=1;
+					break;
+				case KeyEvent.VK_A:
+					panel.player.movex+=1;
+					break;
+				case KeyEvent.VK_S:
+					panel.player.movey-=1;
+					break;
+				case KeyEvent.VK_D:
+					panel.player.movex-=1;
+					break;
+					
+				}
+				keypress = false;
+				}
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.add(panel);
+		timer.start();
+		this.setSize(500,500);
+		this.setVisible(true);
+		
+	}
+
+
+	public static void main(String[] args) {
+		final TestFrame f = new TestFrame();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				f.init();
+			}
+		});
+		
+
+	}	
+
+}

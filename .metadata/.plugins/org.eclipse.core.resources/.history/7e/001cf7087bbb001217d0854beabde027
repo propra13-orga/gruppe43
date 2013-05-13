@@ -1,0 +1,52 @@
+package com.github.propra13.gruppe43;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+import javax.imageio.ImageIO;
+
+public class LevelShower extends Component{
+	game game = null;
+	BufferedImage img;
+	BufferedImage wallimg = null, floorimg = null, playerimg = null;
+	
+	public void init (){
+		try {
+			wallimg = ImageIO.read(new File("wall.png"));
+			floorimg = ImageIO.read(new File("floor.png"));
+			playerimg = ImageIO.read(new File("player.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+	}
+	
+	public void paint(Graphics g) {
+			int width = 32;
+			int height = 32;
+			for (int i=0; i<level.size_x;i++) {
+				for (int j=0; j<level.size_y;j++) {
+					switch (level.getField(i, j).type) {
+					case Field.FLOOR:
+						img = floorimg;
+						break;
+					case Field.WALL:
+						img = wallimg;
+						break;
+					default:
+						img = floorimg;
+						break;
+					}
+					g.drawImage(img, i*width, j*height, width, height, null);
+					if (level.getField(i, j).actor != null) {
+						g.drawImage(playerimg, i*width, j*height, width, height, null);
+					}
+				}
+			}
+		}
+		
+
+
+}
