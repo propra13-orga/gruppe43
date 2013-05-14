@@ -10,6 +10,9 @@ public class Actor{
 	public int currentAction = Actor.MOVE;
 	//Aktionen
 	final static int MOVE = 0;
+
+	//Status des Actors: 0 = lebt, 1 = tot
+	public int state = 0; 
 	
 	//Bewegungsrichtung:
 	public int movex, movey;

@@ -1,9 +1,7 @@
-###################################
-#OOOOOOO#OOOOOOOOOOOOOOOOOOOOOOOOOO
-OOOOOOOO##############OOOOOOOOOOOOO
-#OOOOOOO#OOOOOOOOOOOOOOOOOOOOOOOOOO
-##################O################
-#OOOOOOO#OOOOOOOOOOOOOOOOOOOOOOOOOO
-OOOOOOOO###########################
-#OOOOOOO###########################
-##########OOOOOOO#EOOOOOOX##OOOOOOO
+####################################
+#EOOOOOO#XOOOOOOOOOOOOOOOOOOOOOOOOO#
+#######O##########################O#
+#OOOOOOO##########################O#
+#o################################O#
+#OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO#
+####################################

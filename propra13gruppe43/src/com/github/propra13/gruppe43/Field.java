@@ -8,6 +8,7 @@ public class Field {
 	final static char WALL = '#';  
 	final static char ENTRANCE = 'E';
 	final static char EXIT = 'X';
+	final static char TRAP = 'T';
 	//Koordinaten des Feldes
 	int x;
 	int y;
@@ -21,14 +22,23 @@ public class Field {
 	
 	//erstellt ein Feld mit dem angegebenen Typen im Level level
 	public Field(char tp, Level lvl) {
-		type = tp;
 		level = lvl;
+		this.changeType(tp);
+	
+	}
+		
+	//ändert den Typen des Feldes
+	public void changeType(char tp) {
+		type = tp;
 		switch (type) {
 		case FLOOR:
 			walkable = true;
 			break;
 		case WALL:
 			walkable = false;
+			break;
+		case TRAP:
+			walkable = true;
 			break;
 		case ENTRANCE:
 			level.entrance = this;
@@ -42,17 +52,21 @@ public class Field {
 			walkable = true;
 			break;
 		}
+	}
 		
-		}
+		
 		
 	//wird aufgerufen, wenn dieses Feld betreten wird
 	public void onEntry() {
 		switch (type) {
+		case TRAP:
+			this.actor.state = 1;
+			break;
 		case ENTRANCE:
-			level.game.changeLevel(level.game.currentLevelId-1, 1);
+			if (this.actor == this.level.game.player) level.game.changeLevel(level.game.currentLevelId-1, 1);
 			break;
 		case EXIT:
-			level.game.changeLevel(level.game.currentLevelId+1, 0);
+			if (this.actor == this.level.game.player) level.game.changeLevel(level.game.currentLevelId+1, 0);
 			break;
 		default:
 			break;

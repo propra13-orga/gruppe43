@@ -7,19 +7,22 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class LevelPanel extends JPanel{
-	final int IMAGE_COUNT = 4;
+	final int IMAGE_COUNT = 5;
 	Game game = null;
 	BufferedImage img;
 	BufferedImage[] images = new BufferedImage[IMAGE_COUNT];
-	String[] path = {"FLOOR.png","WALL.png", "ENTRANCE.png", "EXIT.png"};
-	BufferedImage playerimg = null;
+	String[] path = {"FLOOR.png","WALL.png", "TRAP.png", "ENTRANCE.png", "EXIT.png"};
+	BufferedImage[] playerimg = new BufferedImage[2];
 	
 	public void init (){
 		String[] lvlpath = {"level1.txt", "level2.txt", "level3.txt", "level4.txt"};
 		game = new Game(lvlpath);
 		try {
+			img = ImageIO.read(new File("player.png"));
 			for (int i = 0; i<IMAGE_COUNT;i++) images[i] = ImageIO.read(new File(path[i]));
-			playerimg = ImageIO.read(new File("player.png"));
+			for (int i = 0; i<2;i++) playerimg[i] = img.getSubimage(64*i, 0, 64, 64);
+	
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,11 +43,14 @@ public class LevelPanel extends JPanel{
 					case Field.WALL:
 						img = images[1];
 						break;
-					case Field.ENTRANCE:
+					case Field.TRAP:
 						img = images[2];
 						break;
-					case Field.EXIT:
+					case Field.ENTRANCE:
 						img = images[3];
+						break;
+					case Field.EXIT:
+						img = images[4];
 						break;
 					default:
 						img = images[0];
@@ -52,7 +58,7 @@ public class LevelPanel extends JPanel{
 					}
 					g.drawImage(img, i*width, j*height, width, height, null);
 					if (game.levels[game.currentLevelId].getField(i, j).actor != null) {
-						g.drawImage(playerimg, i*width, j*height, width, height, null);
+						g.drawImage(playerimg[game.player.state], i*width, j*height, width, height, null);
 					}
 				}
 			}

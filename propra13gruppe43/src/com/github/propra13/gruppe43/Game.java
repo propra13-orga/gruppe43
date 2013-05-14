@@ -20,10 +20,10 @@ public class Game {
 		levels[i].game = this;
 		}
 		//Eingang des ersten und Ausgang des letzten Levels entfernen
-		levels[0].entrance.type = Field.FLOOR;
-		levels[LEVEL_COUNT-1].exit.type = Field.FLOOR;
+		levels[0].entrance.changeType(Field.FLOOR);
+		levels[LEVEL_COUNT-1].exit.changeType(Field.FLOOR);
 	
-		player.move(levels[0].entrance);
+		player.move(levels[0].entrance, false);
 		
 		
 	}
