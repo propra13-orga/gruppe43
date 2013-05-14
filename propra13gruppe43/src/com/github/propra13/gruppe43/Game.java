@@ -23,7 +23,7 @@ public class Game {
 		levels[0].entrance.type = Field.FLOOR;
 		levels[LEVEL_COUNT-1].exit.type = Field.FLOOR;
 	
-		player.move(levels[0].getField(3, 3));
+		player.move(levels[0].entrance);
 		
 		
 	}

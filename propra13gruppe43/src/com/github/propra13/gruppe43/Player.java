@@ -17,7 +17,6 @@ public class Player extends Actor{
 			energy = ENERGY_MAX;
 			switch (currentAction) {
 			case Actor.MOVE:
-				
 				if ((movex != 0 || movey != 0) &&  this.field.x+movex < this.field.level.size_x && this.field.y+movey < this.field.level.size_y && this.field.x+movex >=0 && this.field.y+movey >=0) {
 				if (this.move(this.field.level.getField(this.field.x+movex, this.field.y+movey))) energy-=100;
 				

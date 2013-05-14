@@ -19,6 +19,12 @@ public class Actor{
 	
 	public Actor() {
 	}
+	
+	public void act() {
+		
+	}
+	
+	
 	//bewegt den Actor aus das Zielfeld, gibt true aus, falls erfolgreich, sonst false
 	//entry gibt an, ob die Methode onEntry des Zielfeldes ausgelöst wird
 	public boolean move(Field t, boolean entry) {
@@ -36,9 +42,7 @@ public class Actor{
 	}
 
 	
-	public void act() {
-		
-	}
+
 	
 
 }
