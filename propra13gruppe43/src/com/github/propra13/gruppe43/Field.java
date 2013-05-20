@@ -9,6 +9,7 @@ public class Field {
 	final static char ENTRANCE = 'E';
 	final static char EXIT = 'X';
 	final static char TRAP = 'T';
+	final static char OBJECTIVE = 'D';
 	//Koordinaten des Feldes
 	int x;
 	int y;
@@ -48,6 +49,9 @@ public class Field {
 			level.exit = this;
 			walkable = true;
 			break;
+		case OBJECTIVE:
+			walkable = true;
+			break;
 		default:
 			walkable = true;
 			break;
@@ -67,6 +71,9 @@ public class Field {
 			break;
 		case EXIT:
 			if (this.actor == this.level.game.player) level.game.changeLevel(level.game.currentLevelId+1, 0);
+			break;
+		case OBJECTIVE:
+			if (this.actor == this.level.game.player) level.game.state = 2;
 			break;
 		default:
 			break;

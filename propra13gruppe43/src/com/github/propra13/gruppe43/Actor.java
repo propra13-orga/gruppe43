@@ -5,7 +5,7 @@ public class Actor{
 	// energy wird benötigt um zu handeln
 	final int ENERGY_MAX = 1000;
 	public int energy = ENERGY_MAX;
-	public int energyGain = ENERGY_MAX / 300;
+	public int energyGain = 3;
 	// Aktion, die ausgeführt wird
 	public int currentAction = Actor.MOVE;
 	//Aktionen

@@ -7,6 +7,8 @@ public class Game {
 	Level[] levels = new Level[10];
 	//Figur des Spielers
 	Player player;
+	//Status des Spiels: 0 = Spiel läuft, 1 = verloren, 2 = gewonnen
+	int state = 0;
 	
 	
 	
@@ -16,12 +18,11 @@ public class Game {
 		//Levels laden
 		for (int i = 0; i<LEVEL_COUNT;i++) {
 		levels[i] = new Level();
-		levels[i].init(lvlpath[i]);
-		levels[i].game = this;
+		levels[i].init("lvl/"+lvlpath[i], this);
 		}
 		//Eingang des ersten und Ausgang des letzten Levels entfernen
 		levels[0].entrance.changeType(Field.FLOOR);
-		levels[LEVEL_COUNT-1].exit.changeType(Field.FLOOR);
+		levels[LEVEL_COUNT-1].exit.changeType(Field.OBJECTIVE);
 	
 		player.move(levels[0].entrance, false);
 		
@@ -29,9 +30,12 @@ public class Game {
 	}
 	
 	
-	//führt den nächsten Schritt des Spiels aus;
+	//führt den nächsten Schritt des Spiels aus, ruft act() für alle Actors aufd
 	public void gameUpdate() {
+		if (player.state == 1) state = 1;
+		if (state == 0) {
 		player.act();
+		}
 		
 	}
 	//wechselt zum Level mit der angegebenen ID

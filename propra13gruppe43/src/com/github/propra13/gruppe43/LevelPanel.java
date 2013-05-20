@@ -7,19 +7,21 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class LevelPanel extends JPanel{
-	final int IMAGE_COUNT = 5;
+	final int IMAGE_COUNT = 6;
 	Game game = null;
 	BufferedImage img;
 	BufferedImage[] images = new BufferedImage[IMAGE_COUNT];
-	String[] path = {"FLOOR.png","WALL.png", "TRAP.png", "ENTRANCE.png", "EXIT.png"};
+	String[] path = {"FLOOR.png","WALL.png", "TRAP.png", "ENTRANCE.png", "EXIT.png","OBJECTIVE.png"};
 	BufferedImage[] playerimg = new BufferedImage[2];
+	int displayLevel;
 	
 	public void init (){
-		String[] lvlpath = {"level1.txt", "level2.txt", "level3.txt", "level4.txt"};
+		String[] lvlpath = {"level1.txt", "level2.txt", "level3.txt"};
 		game = new Game(lvlpath);
+		displayLevel = game.currentLevelId;
 		try {
-			img = ImageIO.read(new File("player.png"));
-			for (int i = 0; i<IMAGE_COUNT;i++) images[i] = ImageIO.read(new File(path[i]));
+			img = ImageIO.read(new File("img/player.png"));
+			for (int i = 0; i<IMAGE_COUNT;i++) images[i] = ImageIO.read(new File("img/"+path[i]));
 			for (int i = 0; i<2;i++) playerimg[i] = img.getSubimage(64*i, 0, 64, 64);
 	
 			
@@ -34,9 +36,9 @@ public class LevelPanel extends JPanel{
 	public void paint(Graphics g) {
 			int width = 32;
 			int height = 32;
-			for (int i=0; i<game.levels[game.currentLevelId].size_x;i++) {
-				for (int j=0; j<game.levels[game.currentLevelId].size_y;j++) {
-					switch (game.levels[game.currentLevelId].getField(i, j).type) {
+			for (int i=0; i<game.levels[displayLevel].size_x;i++) {
+				for (int j=0; j<game.levels[displayLevel].size_y;j++) {
+					switch (game.levels[displayLevel].getField(i, j).type) {
 					case Field.FLOOR:
 						img = images[0];
 						break;
@@ -52,12 +54,15 @@ public class LevelPanel extends JPanel{
 					case Field.EXIT:
 						img = images[4];
 						break;
+					case Field.OBJECTIVE:
+						img = images[5];
+						break;
 					default:
 						img = images[0];
 						break;
 					}
 					g.drawImage(img, i*width, j*height, width, height, null);
-					if (game.levels[game.currentLevelId].getField(i, j).actor != null) {
+					if (game.levels[displayLevel].getField(i, j).actor != null) {
 						g.drawImage(playerimg[game.player.state], i*width, j*height, width, height, null);
 					}
 				}

@@ -25,7 +25,8 @@ public class Level {
 	
 	
 	//liest ein Level aus einer Textdatei mit dem Pfad "path" ein und speichert dieses in dem Array fields
-	public boolean init(String path) {
+	public boolean init(String path, Game gm) {
+		game = gm;
 		String s;
 		int c = 0;
 		Scanner scanner = null;
