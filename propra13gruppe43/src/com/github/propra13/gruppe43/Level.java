@@ -12,6 +12,8 @@ public class Level {
 	int size_x, size_y;
 	//Felder des Levels
 	ArrayList<ArrayList<Field>> fields;
+	//Actors des Levels
+	ArrayList<Actor> actors;
 	//Game zu dem dieses Level gehört
 	Game game = null;
 	//Ein- und Ausgang des Levels
@@ -21,6 +23,7 @@ public class Level {
 	
 	public Level() {
 		fields = new ArrayList<ArrayList<Field>>();
+		actors = new ArrayList<Actor>();
 	}
 	
 	
@@ -63,7 +66,7 @@ public class Level {
 	}
 	// gibt das Feld des Levels mit den Koordinaten x,y zurück
 	public Field getField(int x, int y) {
-		if (x<size_x && y<size_y) {
+		if (x<size_x && y<size_y && x>=0 && y>=0) {
 			return fields.get(x).get(y);
 		}
 		else {
@@ -71,5 +74,7 @@ public class Level {
 		}
 	}
 
+	public void addActor(Actor actor) { actors.add(actor); }
+	public void removeActor(Actor actor) { actors.remove(actor); }
 
 }
