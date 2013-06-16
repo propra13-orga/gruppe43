@@ -50,12 +50,6 @@ public class TestFrame extends JFrame{
 	
 	
 	
-	
-
-	
-	
-
-
 
 	public static void main(String[] args) {
 		final TestFrame f = new TestFrame();

@@ -1,5 +1,7 @@
 package com.github.propra13.gruppe43.Items;
 
+import Effects.Effect;
+
 import com.github.propra13.gruppe43.Actor;
 import com.github.propra13.gruppe43.DamageTypes;
 import com.github.propra13.gruppe43.Field;
@@ -19,11 +21,11 @@ public class Weapon extends Item {
 		switch (id) {
 			case ID_SWORD:
 				damage = 25;
-				energyCost = 300;
+				energyCost = 150;
 				break;
 			default:
 				damage = 10;
-				energyCost = 300;
+				energyCost = 150;
 				break;
 		}
 	}
@@ -42,7 +44,14 @@ public class Weapon extends Item {
 	//wird ausgelöst wenn Actor a  das Feld t mit dieser Waffe angreift, aus der Richtung des Vektors (facex, facey)
 		public void onHit(Actor a, Field t, int facex, int facey) {
 			if (a != null && t != null) {
-				if (t.getActor()!= null) a.dealDamage(t.getActor(), damage, DamageTypes.PHYSICAL);
+					if (t.getActor()!= null) a.dealDamage(t.getActor(), damage, DamageTypes.PHYSICAL);
+					switch (id) {
+					case ID_SWORD:
+						new Effect(t, Effect.SLASH);
+						break;
+					default:
+					break;
+				}
 			}
 		}
 }

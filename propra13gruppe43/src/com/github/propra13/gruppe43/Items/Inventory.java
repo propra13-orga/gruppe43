@@ -9,7 +9,7 @@ import com.github.propra13.gruppe43.Field;
 public class Inventory {
 	Actor actor;
 	//Items, die getragen werden
-	final static int EQSLOTS = 2;
+	public final static int EQSLOTS = 2;
 	Item[] equipment;
 	
 	//Items im Inventar

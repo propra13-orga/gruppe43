@@ -3,8 +3,6 @@ package com.github.propra13.gruppe43;
 import java.awt.image.BufferedImage;
 
 public class Player extends Actor{
-
-
 	
 	public Player() {
 		super();
@@ -15,7 +13,7 @@ public class Player extends Actor{
 	}
 	//erhöht energy, wenn ENERGY_MAX erreicht ist, wird energy verwendet um eine Aktion durchzuführen.
 	public void act() {
-		if (this.state != 1) { //nur handeln, wenn der Player nicht tot ist
+		if (this.state != 0) { //nur handeln, wenn der Player nicht tot ist
 			if (energy < ENERGY_MAX) {
 				energy+=energyGain;
 			}
@@ -45,6 +43,13 @@ public class Player extends Actor{
 		
 	}
 	
+	public void restorePlayer() {
+		health = maxHealth;
+		mana = maxMana;
+		state = 1;
+		energy = 0;
+	}
+	
 	//bewegt den Actor aus das Zielfeld, gibt true zurück, falls erfolgreich, sonst false
 	//entry gibt an, ob die Methode onEntry des Zielfeldes ausgelöst wird
 	public boolean move(Field t, boolean entry) {
@@ -59,4 +64,7 @@ public class Player extends Actor{
 		return this.move(t, true);
 	}
 
+	
 }
+
+

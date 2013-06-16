@@ -5,7 +5,7 @@ import com.github.propra13.gruppe43.Field;
 
 public class Item {
 	//Typ des Items und ID des Items
-	int type = 0;
+	public int type = 0;
 	int id = 0;
 	//Item-Typen
 	public final static int TYPE_WEAPON = 0;
@@ -45,5 +45,7 @@ public class Item {
 	public int whenHit(Actor a, Actor attacker, int damage, int dType)  {
 		return damage;
 	}
+	
+	public int getId() { return id;}
 
 }

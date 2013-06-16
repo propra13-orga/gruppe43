@@ -8,11 +8,12 @@ public class Actor{
 	// energy wird benötigt um zu handeln
 	final int ENERGY_MAX = 1000;
 	public int energy = ENERGY_MAX;
-	public int energyGain = 40;
+	public int energyGain = 8;
 	
 	//Lebenspunkte und Mana
-	public int maxhealth = 100;
+	public int maxHealth = 100;
 	public int health = 100;
+	public int maxMana = 100;
 	public int mana = 100;
 	
 	//Inventar des Actors
@@ -26,16 +27,16 @@ public class Actor{
 	public final static int ATTACK = 1;
 	
 	//benötigte Energie für Aktionen
-	public int costMOVE = 300;
-	public int costATTACK = 300;
+	public int costMOVE = 60;
+	public int costATTACK = 60;
 	
 	//Actor-Typen
 	final static int PLAYER = 0;
 
 	//Typ dieses Actors
 	public int type = 0;
-	//Status des Actors: 0 = lebt, 1 = tot
-	public int state = 0; 
+	//Status des Actors: 1 = lebt, 0 = tot
+	public int state = 1; 
 	
 	//Richtung, in die der Actor agiert:
 	public int facex, facey;
@@ -48,6 +49,33 @@ public class Actor{
 	}
 	
 	public void act() {
+		if (this.state != 0) { //nur handeln, wenn der Player nicht tot ist
+			if (energy < ENERGY_MAX) {
+				energy+=energyGain;
+			}
+			else {
+				
+				  //nur Aktionen ausführen, wenn der Actor in eine bestimmte Richtung schaut
+					
+					energy = ENERGY_MAX;
+					//verschiedene Aktionen ausführen
+					switch (currentAction) {
+						case Actor.MOVE:
+							Field targetField;
+							if (( targetField = this.getLevel().getField(this.field.x+facex, this.field.y+facey)) != null) {
+								if (this.move(targetField, true)) energy-=costMOVE;					
+							}					
+							break;
+						case Actor.ATTACK:
+							if (facex != 0 || facey != 0) if (attack()) energy-=costATTACK;
+							break;
+						default:
+							break;
+						
+					}
+				
+				}
+		}
 		
 	}
 	
@@ -59,9 +87,12 @@ public class Actor{
 			t.actor = this;
 			if (field != null) {
 				field.actor = null;
-				if (field != t) field.getLevel().removeActor(this);
+				if (field.getLevel() != t.getLevel()) {
+					field.getLevel().removeActor(this);
+					t.getLevel().addActor(this);
+				}
 			}
-			if (field != t) t.getLevel().addActor(this);
+			else t.getLevel().addActor(this);
 			this.field = t;
 			if (entry) t.onEntry();
 			return true;
@@ -80,7 +111,7 @@ public class Actor{
 	}
 	
 	private void changeHealth(int a) {
-		health = Math.min(maxhealth, Math.max(0, health+a));
+		health = Math.min(maxHealth, Math.max(0, health+a));
 		if (health == 0) kill();
 	}
 	
@@ -89,10 +120,10 @@ public class Actor{
 	
 	//zerberstet den Actor
 	public void kill() {
-		state = 1;
+		state = 0;
 		getLevel().actors.remove(this);
+		inventory.dropItems(field);
 		field.actor = null;
-		inventory.dropItems(getField());
 		
 	}
 
@@ -104,11 +135,10 @@ public class Actor{
 	
 	//nimmt Schaden in Höhe von damage vom Typ dType durch den Actor a, eventuell modifiziert durch Rüstung
 	public void takeDamage(Actor a, int damage, int dType) {
-		if (damage<0) damage=0;
 		
 		if (this.hasEquipped(Item.TYPE_ARMOR))  damage = this.getInventory().getEquipment(Item.TYPE_ARMOR).whenHit(this, a, damage, dType);
-		
-		this.changeHealth(-damage);
+
+		this.changeHealth(-Math.max(0, damage));
 		
 		
 	}
@@ -118,8 +148,11 @@ public class Actor{
 	public Inventory getInventory() { return this.inventory; }
 	public boolean hasEquipped(int i) {return this.getInventory().hasEquipped(i); }
 	
+	public boolean isAlive() { return (state != 0); }
 	public int getHealth() { return this.health; }
+	public int getMaxHealth() { return this.maxHealth; }
 	public int getMana() {return this.mana; }
+	public int getMaxMana() { return this.maxMana; }
 	public Field getField() { return this.field; }
 	public Level getLevel() { return this.field.level; }
 	public Game getGame() {return this.field.level.game; }

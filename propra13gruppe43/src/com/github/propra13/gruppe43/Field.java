@@ -8,12 +8,14 @@ import com.github.propra13.gruppe43.Items.Item;
 public class Field {
 	
 	//Feldtypen
-	final static char FLOOR = '='; 
-	final static char WALL = '#';  
-	final static char ENTRANCE = 'E';
-	final static char EXIT = 'X';
-	final static char TRAP = 'T';
-	final static char OBJECTIVE = 'D';
+	public final static char FLOOR = '='; 
+	public final static char WALL = '#';  
+	public final static char ENTRANCE = 'E';
+	public final static char EXIT = 'X';
+	public final static char TRAP = 'T';
+	public final static char OBJECTIVE = 'D';
+	public final static char CHECKPOINT = 'C';
+	public final static char ACTIVE_CHECKPOINT = 'c';
 	
 	//Koordinaten des Feldes
 	int x;
@@ -65,6 +67,12 @@ public class Field {
 		case OBJECTIVE:
 			walkable = true;
 			break;
+		case CHECKPOINT:
+			walkable = true;
+			break;
+		case ACTIVE_CHECKPOINT:
+			walkable = true;
+			break;
 		default:
 			walkable = true;
 			break;
@@ -88,6 +96,9 @@ public class Field {
 			break;
 		case OBJECTIVE:
 			if (this.actor == this.level.game.player) level.game.state = 2;
+			break;
+		case CHECKPOINT:
+			if (this.actor == this.level.game.player) level.game.setCheckpoint(this);
 			break;
 		default:
 			break;

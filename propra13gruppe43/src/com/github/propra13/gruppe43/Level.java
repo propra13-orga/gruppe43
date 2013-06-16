@@ -6,14 +6,20 @@ import java.util.*;
 
 import javax.imageio.ImageIO;
 
+import Effects.Effect;
+
 
 public class Level {
+	//ID des Levels im Spiel
+	int id;
 	//Größe des Levels
 	int size_x, size_y;
 	//Felder des Levels
 	ArrayList<ArrayList<Field>> fields;
 	//Actors des Levels
 	ArrayList<Actor> actors;
+	//Effekte  des Levels
+	ArrayList<Effect> effects;
 	//Game zu dem dieses Level gehört
 	Game game = null;
 	//Ein- und Ausgang des Levels
@@ -21,9 +27,11 @@ public class Level {
 	Field exit = null;
 	
 	
-	public Level() {
+	public Level(int i) {
+		id = i;
 		fields = new ArrayList<ArrayList<Field>>();
 		actors = new ArrayList<Actor>();
+		effects = new ArrayList<Effect>();
 	}
 	
 	
@@ -73,8 +81,10 @@ public class Level {
 			return null;
 		}
 	}
-
+	public int getId() {return id;}
 	public void addActor(Actor actor) { actors.add(actor); }
 	public void removeActor(Actor actor) { actors.remove(actor); }
+	public void addEffect(Effect effect) { effects.add(effect); }
+	public void removeEffect(Effect effect) { effects.remove(effect); }
 
 }
