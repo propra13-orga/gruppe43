@@ -87,7 +87,7 @@ public class Game implements KeyInterface{
 		boy.move(levels[1].getField(8, 7), false);
 		boy.getInventory().equipItem(Item.createItem(Item.ID_AXE));
 		//Level 6
-		levels[5].getField(1, 1).addItem(Item.createItem(Item.ID_MANA_POTION));
+		levels[5].getField(2, 2).addItem(Item.createItem(Item.ID_MANA_POTION));
 		levels[5].entrance.changeType(Field.FLOOR);
 		levels[5].exit.changeType(Field.FLOOR);
 		dude = new Boss( new FindAI(player), 200, 0, 5, 1);
@@ -97,7 +97,7 @@ public class Game implements KeyInterface{
 		//Level 7
 		//Level 8
 		man = new ShopNPC("Verkäufer"); 
-		guy.getInventory().items.add(Item.createItem(Item.ID_VICTORY_ARMOR));
+		man.getInventory().items.add(Item.createItem(Item.ID_VICTORY_ARMOR));
 		man.getInventory().setDrop(1);
 		man.move(levels[7].getField(1, 1), true);
 		//Level 9
