@@ -2,6 +2,7 @@ package com.github.propra13.gruppe43;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
@@ -34,19 +35,23 @@ public class GameDisplay {
 	BufferedImage[] fieldImages = new BufferedImage[FIELD_IMAGE_COUNT];
 	String[] fieldPath = {"FLOOR.png","WALL.png", "TRAP.png", "ENTRANCE.png", "EXIT.png","OBJECTIVE.png", "CHECKPOINT.png","ACTIVE_CHECKPOINT.png"};
 	
-	final int ACTOR_IMAGE_COUNT = 2;
+	final int ACTOR_IMAGE_COUNT = 5;
 	BufferedImage[] actorImages = new BufferedImage[ACTOR_IMAGE_COUNT];
-	String[] actorPath = {"PLAYER.png", "ENEMY.png"};
+	String[] actorPath = {"PLAYER.png", "ENEMY.png", "TEXT_NPC.png", "SHOP_NPC.png", "BOSS.png"};
 	
-	final int ITEM_IMAGE_COUNT = 2;
+	final int ITEM_IMAGE_COUNT = 8;
 	BufferedImage[] itemImages = new BufferedImage[ITEM_IMAGE_COUNT];
 	BufferedImage[] actorItemImages = new BufferedImage[ITEM_IMAGE_COUNT];
-	String[] itemPath = {"SWORD.png", "TRASH_ARMOR.png"};
-	String[] actorItemPath = {"ACTOR_SWORD.png", "ACTOR_TRASH_ARMOR.png"};
+	String[] itemPath = {"SWORD.png", "TRASH_ARMOR.png", "HEALTH_POTION.png","MANA_POTION.png","GOLD.png", "SPELLBOOK_FIREBALL.png", "AXE.png", "VICTORY_ARMOR.png"};
+	String[] actorItemPath = {"ACTOR_SWORD.png", "ACTOR_TRASH_ARMOR.png", "HEALTH_POTION.png","MANA_POTION.png","GOLD.png", "SPELLBOOK_FIREBALL.png", "ACTOR_AXE.png", "ACTOR_VICTORY_ARMOR.png"};	
 	
-	final int EFFECT_IMAGE_COUNT = 1;
+	final int PROJECTILE_IMAGE_COUNT = 1;
+	BufferedImage[] projectileImages = new BufferedImage[PROJECTILE_IMAGE_COUNT];
+	String[] projectilePath = {"FIREBALL.png"};
+	
+	final int EFFECT_IMAGE_COUNT = 2;
 	BufferedImage[] effectImages = new BufferedImage[EFFECT_IMAGE_COUNT];
-	String[] effectPath = {"SLASH.png"};
+	String[] effectPath = {"SLASH.png", "FIRE_SPLASH.png"};
 	
 	public GameDisplay(Game gm) {
 		game = gm;
@@ -62,6 +67,7 @@ public class GameDisplay {
 			for (int i = 0; i<ITEM_IMAGE_COUNT;i++) itemImages[i] = ImageIO.read(new File("img/"+itemPath[i]));
 			for (int i = 0; i<ITEM_IMAGE_COUNT;i++) actorItemImages[i] = ImageIO.read(new File("img/"+actorItemPath[i]));
 			for (int i = 0; i<EFFECT_IMAGE_COUNT;i++) effectImages[i] = ImageIO.read(new File("img/"+effectPath[i]));
+			for (int i = 0; i<PROJECTILE_IMAGE_COUNT;i++) projectileImages[i] = ImageIO.read(new File("img/"+projectilePath[i]));
 			
 	
 			
@@ -85,13 +91,16 @@ public class GameDisplay {
 		Graphics2D g = (Graphics2D) img.getGraphics();
 		drawFields(g, game.getCurrentLevel());
 		drawActors(g, game.getCurrentLevel());
+		drawProjectiles(g, game.getCurrentLevel());
 		drawEffects(g, game.getCurrentLevel());
 		
 		displayX = Math.max(0, Math.min(focusX-(WINDOW_SIZE_X/2), width-WINDOW_SIZE_X));
 		displayY = Math.max(0, Math.min(focusY-(WINDOW_SIZE_Y/2), height-WINDOW_SIZE_Y));
-		display = img.getSubimage(displayX, displayY, Math.min(WINDOW_SIZE_X, width-displayX), Math.min(WINDOW_SIZE_Y, height-displayY));
+		display = new BufferedImage(WINDOW_SIZE_X, WINDOW_SIZE_Y, BufferedImage.TYPE_INT_ARGB);
+		display.getGraphics().drawImage(img.getSubimage(displayX, displayY, Math.min(WINDOW_SIZE_X, width-displayX), Math.min(WINDOW_SIZE_Y, height-displayY)), 0, 0, null);
 		g = (Graphics2D) display.getGraphics();
 		drawUI(g);
+		if (game.dialogActive) drawDialog(g, game.dialog);
 	}
 	
 	//Gibt das Bild zurück
@@ -180,6 +189,18 @@ public class GameDisplay {
 		}
 	}
 	
+	//Zeichnet Projektile
+		private void drawProjectiles(Graphics2D g, Level level) {
+			BufferedImage img;
+			Projectile p;
+			for (int j=0; j<level.projectiles.size();j++) {
+				p = level.projectiles.get(j);
+				img = projectileImages[p.type];
+				img = img.getSubimage(32*(1+p.facex), 32*(1+p.facey), 32, 32);
+				g.drawImage(img, p.field.x*TILE_WIDTH, p.field.y*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, null);
+			}
+		}
+	
 	
 	
 	private void drawUI(Graphics2D g) {
@@ -205,9 +226,66 @@ public class GameDisplay {
 		g.setColor(new Color(0, 0, 0));
 		g.drawRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/16)*7,(int) (WINDOW_SIZE_X*0.2), TILE_HEIGHT/3); 
 		//Leben
-		g.drawString(("Leben:" + game.getLives()), (float) (WINDOW_SIZE_X*0.22+TILE_WIDTH+5), (float) (WINDOW_SIZE_Y-TILE_HEIGHT/2));		
+		g.setFont(new Font("Arial", Font.BOLD, 12));
+		g.drawString(("Leben: " + game.getLives()), (float) (WINDOW_SIZE_X*0.22+TILE_WIDTH+5), (float) (WINDOW_SIZE_Y-TILE_HEIGHT/2));		
+		g.drawString(("Gold: " + game.player.getInventory().getGold()), (float) (WINDOW_SIZE_X*0.22+TILE_WIDTH+5), (float) (WINDOW_SIZE_Y-TILE_HEIGHT/6));		
 		
 		
+	}
+	
+	
+	private void drawDialog(Graphics2D g, Dialog dialog) {
+		if (dialog.type == Dialog.TEXT) {
+			int offsetx = (int) (WINDOW_SIZE_X*0.1);
+			int offsety = (int) (WINDOW_SIZE_Y*0.1);
+			TextDialog d = (TextDialog) dialog;
+			g.setColor(new Color(255, 255, 255));
+			g.fillRect(offsetx, offsety, (int) (WINDOW_SIZE_X*0.8), (int) (WINDOW_SIZE_Y*0.8));
+			g.setStroke(new BasicStroke(3));
+			g.setColor(new Color(0, 0, 0));
+			g.drawRect((int) offsetx, (int) offsety, (int) (WINDOW_SIZE_X*0.8), (int) (WINDOW_SIZE_Y*0.8));
+			g.setFont(new Font("Arial", Font.BOLD, 15));
+			offsetx+=30;
+			offsety+=30;
+			g.drawString((d.headline), offsetx, offsety);
+			g.setFont(new Font("Arial", Font.PLAIN, 15));
+			for (int i = 0; i<d.text.length; i++) {
+				offsety+=20;
+				g.drawString((d.text[i]), offsetx, offsety);
+				
+
+				
+			}
+			
+		}
+
+		if (dialog.type == Dialog.SHOP) {
+			int offsetx = (int) (WINDOW_SIZE_X*0.1);
+			int offsety = (int) (WINDOW_SIZE_Y*0.1);
+			ShopDialog d = (ShopDialog) dialog;
+			g.setColor(new Color(255, 255, 255));
+			g.fillRect(offsetx, offsety, (int) (WINDOW_SIZE_X*0.8), (int) (WINDOW_SIZE_Y*0.8));
+			g.setStroke(new BasicStroke(3));
+			g.setColor(new Color(0, 0, 0));
+			g.drawRect((int) offsetx, (int) offsety, (int) (WINDOW_SIZE_X*0.8), (int) (WINDOW_SIZE_Y*0.8));
+			g.setFont(new Font("Arial", Font.BOLD, 15));
+			offsetx+=30;
+			offsety+=30;
+			g.drawString((d.headline), offsetx, offsety);
+			g.drawString("Gold:", offsetx+200, offsety);
+			g.setFont(new Font("Arial", Font.PLAIN, 15));
+			for (int i = 0; i<=d.inventory.items.size(); i++) {
+				offsety+=20;
+				if (i==d.selectionIndex) g.drawString("->", offsetx-20, offsety);
+				if (i<d.inventory.items.size()) {
+				g.drawString(d.inventory.items.get(i).getName(), offsetx, offsety);
+				g.drawString(String.valueOf(d.inventory.items.get(i).getCost()), offsetx+200, offsety);
+				}
+				else g.drawString("Shop verlassen", offsetx, offsety);
+							
+			}
+			
+		}
 	}
 	
 	

@@ -20,11 +20,14 @@ public class Level {
 	ArrayList<Actor> actors;
 	//Effekte  des Levels
 	ArrayList<Effect> effects;
+	//Projektile de levels
+	ArrayList<Projectile> projectiles;
 	//Game zu dem dieses Level gehört
 	Game game = null;
 	//Ein- und Ausgang des Levels
 	Field entrance = null;
 	Field exit = null;
+	Boss boss = null;
 	
 	
 	public Level(int i) {
@@ -32,6 +35,7 @@ public class Level {
 		fields = new ArrayList<ArrayList<Field>>();
 		actors = new ArrayList<Actor>();
 		effects = new ArrayList<Effect>();
+		projectiles = new ArrayList<Projectile>();
 	}
 	
 	
@@ -86,5 +90,7 @@ public class Level {
 	public void removeActor(Actor actor) { actors.remove(actor); }
 	public void addEffect(Effect effect) { effects.add(effect); }
 	public void removeEffect(Effect effect) { effects.remove(effect); }
+	public void addProjectile(Projectile projectile) { projectiles.add(projectile); }
+	public void removeProjectile(Projectile projectile) { projectiles.remove(projectile); }
 
 }

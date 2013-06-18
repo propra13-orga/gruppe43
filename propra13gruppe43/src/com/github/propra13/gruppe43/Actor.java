@@ -8,7 +8,10 @@ public class Actor{
 	// energy wird benötigt um zu handeln
 	final int ENERGY_MAX = 1000;
 	public int energy = ENERGY_MAX;
-	public int energyGain = 8;
+	public int energyGain = 6;
+	
+	//AI des Actors
+	AI ai = null;
 	
 	//Lebenspunkte und Mana
 	public int maxHealth = 100;
@@ -19,12 +22,20 @@ public class Actor{
 	//Inventar des Actors
 	Inventory inventory;
 	
+	//Zauber des Actors, und momentan ausgewählter Zauber
+	public final static int SPELL_NUMBER = 4;
+	Spell[] spells;
+	int currentSpell;
+	
 	// Aktion, die ausgeführt wird
 	public int currentAction = Actor.MOVE;
+	public int nextAction = Actor.NONE;
 	public int defaultAction = Actor.MOVE;
 	//Aktionen
 	public final static int MOVE = 0;
 	public final static int ATTACK = 1;
+	public final static int CAST_SPELL = 2;
+	public final static int NONE = 1000;
 	
 	//benötigte Energie für Aktionen
 	public int costMOVE = 60;
@@ -32,6 +43,10 @@ public class Actor{
 	
 	//Actor-Typen
 	final static int PLAYER = 0;
+	final static int ENEMY = 1;
+	final static int TEXT_NPC = 2;
+	final static int SHOP_NPC = 3;
+	final static int BOSS = 4;
 
 	//Typ dieses Actors
 	public int type = 0;
@@ -46,37 +61,57 @@ public class Actor{
 	
 	public Actor() {
 		inventory = new Inventory(this);
+		spells = new Spell[SPELL_NUMBER];
 	}
 	
 	public void act() {
 		if (this.state != 0) { //nur handeln, wenn der Player nicht tot ist
+			
+			//AI anwenden
+			if (ai != null) ai.useAI(this);
+
+			//Cooldown aller Zauber verringern
+			for (int i=0;i<SPELL_NUMBER;i++) if(spells[i] !=null) spells[i].coolDown();
+			
+			//Energy erhöhen, handeln wenn genug Energy vorhanden ist
 			if (energy < ENERGY_MAX) {
-				energy+=energyGain;
+				changeEnergy(energyGain);
 			}
+			
 			else {
 				
-				  //nur Aktionen ausführen, wenn der Actor in eine bestimmte Richtung schaut
-					
-					energy = ENERGY_MAX;
-					//verschiedene Aktionen ausführen
-					switch (currentAction) {
-						case Actor.MOVE:
-							Field targetField;
-							if (( targetField = this.getLevel().getField(this.field.x+facex, this.field.y+facey)) != null) {
-								if (this.move(targetField, true)) energy-=costMOVE;					
-							}					
-							break;
-						case Actor.ATTACK:
-							if (facex != 0 || facey != 0) if (attack()) energy-=costATTACK;
-							break;
-						default:
-							break;
-						
-					}
 				
+				//verschiedene Aktionen ausführen
+				if (nextAction == NONE) nextAction = currentAction; 
+
+				Field targetField = this.getLevel().getField(this.field.x+facex, this.field.y+facey);
+				switch (nextAction) {
+					case Actor.MOVE:
+						if (targetField != null && targetField != this.field) {
+							if (this.move(targetField, true)) changeEnergy(-costMOVE);					
+						}					
+						break;
+						
+					case Actor.ATTACK:
+						if (facex != 0 || facey != 0) if (attack()) changeEnergy(-costATTACK);
+						break;
+					
+					case Actor.CAST_SPELL:
+						if (spells[currentSpell] != null) {
+							if (spells[currentSpell].castSpell(targetField, facex, facey)) changeEnergy(-spells[currentSpell].energyCost);
+						}
+						break;
+						
+					default:
+						break;
+					
 				}
+				nextAction = NONE;
+						
+			}
+				
 		}
-		
+			
 	}
 	
 	
@@ -110,18 +145,32 @@ public class Actor{
 		else return false;
 	}
 	
-	private void changeHealth(int a) {
+	
+	//wird ausgelöst, wennd er Spieler mit diesem Objekt interagiert
+	public void interacted(Actor a) {
+			
+	}
+	
+	
+	public void changeMana(int a) {
+		mana = Math.min(maxMana, Math.max(0, mana+a));
+	}
+	
+	public void changeEnergy(int a) {
+		energy = Math.min(ENERGY_MAX, Math.max(0, energy+a));
+	}
+	
+	public void changeHealth(int a) {
 		health = Math.min(maxHealth, Math.max(0, health+a));
 		if (health == 0) kill();
 	}
-	
 	
 	//
 	
 	//zerberstet den Actor
 	public void kill() {
 		state = 0;
-		getLevel().actors.remove(this);
+		getLevel().removeActor(this);
 		inventory.dropItems(field);
 		field.actor = null;
 		
@@ -143,11 +192,30 @@ public class Actor{
 		
 	}
 	
-	
+	public boolean addSpell(Spell spell) {
+		for (int i = 0; i<SPELL_NUMBER; i++) {
+			if (spells[i] == null ) {
+				spells[i] = spell;
+				return true;
+				
+			}
+			
+		}
+		return false;
+	}
 	
 	public Inventory getInventory() { return this.inventory; }
 	public boolean hasEquipped(int i) {return this.getInventory().hasEquipped(i); }
 	
+	public void setMaxHealth(int i) {
+		maxHealth = i;
+		changeHealth(i);
+	}
+	
+	public void setMaxMana(int i) {
+		maxMana = i;
+		changeMana(i);
+	}
 	public boolean isAlive() { return (state != 0); }
 	public int getHealth() { return this.health; }
 	public int getMaxHealth() { return this.maxHealth; }

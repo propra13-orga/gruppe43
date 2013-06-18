@@ -13,7 +13,7 @@ public class TestFrame extends JFrame{
 	Game game;
 	GameDisplay display;
 	public void init() {
-		String[] lvlpath = {"level1.txt", "level2.txt", "level3.txt"};
+		String[] lvlpath = {"level1.txt", "level2.txt", "level3.txt", "level4.txt", "level5.txt", "level6.txt", "level7.txt", "level8.txt", "level9.txt"};
 		game = new Game(lvlpath);
 		display = new GameDisplay(game);
 		display.init();
@@ -31,7 +31,7 @@ public class TestFrame extends JFrame{
 			}});
 		
 		panel.setPreferredSize(new Dimension(GameDisplay.WINDOW_SIZE_X-10,GameDisplay.WINDOW_SIZE_Y-10));
-		panel.addKeyListener(new KeyInput(game));
+		panel.addKeyListener(game.keys);
 		this.add(panel);
 		
 		timer.start();

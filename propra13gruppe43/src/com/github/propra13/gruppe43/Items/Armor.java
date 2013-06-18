@@ -12,9 +12,18 @@ public class Armor extends Item {
 		type = TYPE_ARMOR;
 		switch (id) {
 			case ID_TRASH_ARMOR:
+				name = "Wertlose Rüstung";
+				cost = 100;
 				damageFactor = 0.8;
 				damageReduction = 0;
 				break;
+			case ID_VICTORY_ARMOR:
+				name = "Rüstung des Sieges";
+				cost = 9001;
+				damageFactor = 0.1;
+				damageReduction = 0;
+				break;
+				
 			default:
 				damageFactor = 0.8;
 				damageReduction = 0;

@@ -9,6 +9,7 @@ public class Effect {
 	public int type;
 	//Effekt-Typen
 	public final static int SLASH = 0;
+	public final static int FIRE_SPLASH = 1;
 	//Momentaner Zustand des Effektes
 	public int state;
 	//Feld, das dieser Effekt betrifft
@@ -22,6 +23,9 @@ public class Effect {
 		state = 0;
 		switch (type) {
 		case SLASH:
+			duration = 10;
+			break;
+		case FIRE_SPLASH:
 			duration = 10;
 			break;
 		default:
@@ -47,7 +51,6 @@ public class Effect {
 	}
 	
 	public void kill() {
-		System.out.println("dead");
 		duration = 0;
 		state = 0;
 		target.getLevel().removeEffect(this);

@@ -7,8 +7,8 @@ public class KeyInput implements KeyListener{
 	//Ziel, das durch die Tasten angesteuert wird
 	KeyInterface target;
 	//das Array keypress enthält, welche Tasten gedrückt sind
-	boolean[] keypress = new boolean[10];
-	String[] inputStrings = {"up","left","down","right","q","w","e","r","a","s"};
+	boolean[] keypress = new boolean[11];
+	String[] inputStrings = {"up","left","down","right","q","w","e","r","a","s","space"};
 	
 	
 	public KeyInput(KeyInterface k) {
@@ -22,10 +22,15 @@ public class KeyInput implements KeyListener{
 		if (!keypress[1] && b == KeyEvent.VK_LEFT) { target.pressed("left"); keypress[1] = true; }
 		if (!keypress[2] && b == KeyEvent.VK_DOWN){ target.pressed("down"); keypress[2] = true; }
 		if (!keypress[3] && b == KeyEvent.VK_RIGHT) { target.pressed("right"); keypress[3] = true; }
+		if (!keypress[4] && b == KeyEvent.VK_Q) { target.pressed("q"); keypress[4] = true; }
+		if (!keypress[5] && b == KeyEvent.VK_W) { target.pressed("w"); keypress[5] = true; }
+		if (!keypress[6] && b == KeyEvent.VK_E) { target.pressed("e"); keypress[6] = true; }
+		if (!keypress[7] && b == KeyEvent.VK_R) { target.pressed("r"); keypress[7] = true; }
 		
 
 		if (!keypress[8] && b == KeyEvent.VK_A) { target.pressed("a"); keypress[8] = true; }
-		
+
+		if (!keypress[10] && b == KeyEvent.VK_SPACE) { target.pressed("space"); keypress[10] = true; }
 		
 	}
 
@@ -38,8 +43,14 @@ public class KeyInput implements KeyListener{
 		if (keypress[1] && b == KeyEvent.VK_LEFT) { target.released("left"); keypress[1] = false; }
 		if (keypress[2] && b == KeyEvent.VK_DOWN){ target.released("down"); keypress[2] = false; }
 		if (keypress[3] && b == KeyEvent.VK_RIGHT) { target.released("right"); keypress[3] = false; }
+		if (keypress[4] && b == KeyEvent.VK_Q) { target.released("q"); keypress[4] = false; }
+		if (keypress[5] && b == KeyEvent.VK_W) { target.released("w"); keypress[5] = false; }
+		if (keypress[6] && b == KeyEvent.VK_E) { target.released("e"); keypress[6] = false; }
+		if (keypress[7] && b == KeyEvent.VK_R) { target.released("r"); keypress[7] = false; }
+
 
 		if (keypress[8] && b == KeyEvent.VK_A) { target.released("a"); keypress[8] = false; }
+		if (keypress[10] && b == KeyEvent.VK_SPACE) { target.released("space"); keypress[10] = false; }
 	}
 	
 	
