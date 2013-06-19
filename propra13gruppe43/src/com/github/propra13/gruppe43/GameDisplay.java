@@ -16,10 +16,10 @@ import Effects.Effect;
 import com.github.propra13.gruppe43.Items.Inventory;
 
 public class GameDisplay {
-	static int WINDOW_SIZE_X = 520;
-	static int WINDOW_SIZE_Y = 390;
-	static int TILE_WIDTH = 32;
-	static int TILE_HEIGHT = 32;
+	public final static int TILE_WIDTH = 32;
+	public final static int TILE_HEIGHT = 32;
+	public final static int WINDOW_SIZE_X = 16*TILE_WIDTH;
+	public final static int WINDOW_SIZE_Y = 12*TILE_HEIGHT;
 	
 	//Bild, das angezeigt wird
 	BufferedImage display;
@@ -82,8 +82,8 @@ public class GameDisplay {
 	public void updateDisplay() {
 		int width = game.getCurrentLevel().size_x*TILE_WIDTH;
 		int height = game.getCurrentLevel().size_y*TILE_HEIGHT;
-		int focusX = focus.getField().x*TILE_WIDTH+16;
-		int focusY = focus.getField().y*TILE_HEIGHT+16;
+		int focusX = (int) ((focus.getField().x-focus.calcOffsetx())*TILE_WIDTH+16);
+		int focusY = (int) ((focus.getField().y-focus.calcOffsety())*TILE_HEIGHT+16);
 		int displayX;
 		int displayY;
 		
@@ -166,11 +166,13 @@ public class GameDisplay {
 		for (int j=0; j<level.actors.size();j++) {
 			a = level.actors.get(j);
 			img = actorImages[a.type];
-			g.drawImage(img, a.field.x*TILE_WIDTH, a.field.y*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, null);
+			int offx = (int) ((a.getField().x-a.calcOffsetx())*TILE_WIDTH);
+			int offy = (int) ((a.getField().y-a.calcOffsety())*TILE_HEIGHT);
+			g.drawImage(img, offx, offy, TILE_WIDTH, TILE_HEIGHT, null);
 			for (int k=0; k<Inventory.EQSLOTS; k++) {
 				if (a.getInventory().getEquipment(k) != null) {
 					img = actorItemImages[a.getInventory().getEquipment(k).getId()];
-					g.drawImage(img, a.getField().x*TILE_WIDTH, a.getField().y*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, null);
+					g.drawImage(img, offx, offy, TILE_WIDTH, TILE_HEIGHT, null);
 				}
 			}
 		}
@@ -192,12 +194,15 @@ public class GameDisplay {
 	//Zeichnet Projektile
 		private void drawProjectiles(Graphics2D g, Level level) {
 			BufferedImage img;
-			Projectile p;
+			Projectile p;		
 			for (int j=0; j<level.projectiles.size();j++) {
+
 				p = level.projectiles.get(j);
+				int offx = (int) ((p.getField().x-p.calcOffsetx())*TILE_WIDTH);
+				int offy = (int) ((p.getField().y-p.calcOffsety())*TILE_HEIGHT);
 				img = projectileImages[p.type];
 				img = img.getSubimage(32*(1+p.facex), 32*(1+p.facey), 32, 32);
-				g.drawImage(img, p.field.x*TILE_WIDTH, p.field.y*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, null);
+				g.drawImage(img, offx, offy, TILE_WIDTH, TILE_HEIGHT, null);
 			}
 		}
 	

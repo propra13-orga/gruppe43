@@ -56,8 +56,14 @@ public class Actor{
 	//Richtung, in die der Actor agiert:
 	public int facex, facey;
 	
-	//Feld auf dem sich Actor befindet
+	//Feld auf dem sich Actor befindet, und das vorherige Feld
 	Field field = null;
+	//benötigt für Anzeige
+	Field fieldLast = null;
+	int posSpeed = 0;
+	int maxPos = 10;
+	int currentPos = 0;
+	
 	
 	public Actor() {
 		inventory = new Inventory(this);
@@ -76,10 +82,11 @@ public class Actor{
 			//Energy erhöhen, handeln wenn genug Energy vorhanden ist
 			if (energy < ENERGY_MAX) {
 				changeEnergy(energyGain);
+				if (fieldLast != field) currentPos+=posSpeed;
 			}
 			
 			else {
-				
+				fieldLast = field;
 				
 				//verschiedene Aktionen ausführen
 				if (nextAction == NONE) nextAction = currentAction; 
@@ -88,7 +95,12 @@ public class Actor{
 				switch (nextAction) {
 					case Actor.MOVE:
 						if (targetField != null && targetField != this.field) {
-							if (this.move(targetField, true)) changeEnergy(-costMOVE);					
+							if (this.move(targetField, true))  {
+								changeEnergy(-costMOVE);
+								currentPos = 0;
+								maxPos = costMOVE;
+								posSpeed = energyGain;
+							}
 						}					
 						break;
 						
@@ -130,6 +142,7 @@ public class Actor{
 			else t.getLevel().addActor(this);
 			this.field = t;
 			if (entry) t.onEntry();
+			if(fieldLast == null || fieldLast.getLevel() != field.getLevel()) fieldLast = field;
 			return true;
 					
 		}
@@ -224,6 +237,17 @@ public class Actor{
 	public Field getField() { return this.field; }
 	public Level getLevel() { return this.field.level; }
 	public Game getGame() {return this.field.level.game; }
+	
+
+	public Field getFieldLast() { return this.fieldLast; }
+	
+	public double calcOffsetx() {
+		return  ((field.x - fieldLast.x) * ((maxPos-currentPos) / ((double) maxPos))); 
+	}
+	
+	public double calcOffsety() {
+		return ((field.y - fieldLast.y) * ((maxPos-currentPos) / ((double) maxPos))); 
+	}
 
 	
 

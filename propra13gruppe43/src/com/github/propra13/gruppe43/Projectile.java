@@ -25,9 +25,12 @@ public class Projectile {
 	
 	//Feld auf dem sich das Projectile befindet
 	Field field = null;
+	Field fieldLast = null;
 	
 	//Actor, dem das Projektil gehört
 	Actor owner = null;
+	
+
 	
 	//
 	public Projectile(int tp, Actor a, Field t, int fx, int fy, int spd, int rch, int dmg, int dp) {
@@ -52,9 +55,11 @@ public class Projectile {
 		
 		if (reach != 0) { //nur handeln, wenn der Player nicht tot ist
 			if (speedc < 100) {
-				speedc+=speed;
+				speedc = Math.min(100, speedc+speed);
+				
 			}
-			else {				
+			else {		
+				fieldLast = field;
 				speedc = 0;
 				Field targetField;
 				if (( targetField = field.getLevel().getField(this.field.x+facex, this.field.y+facey)) != null) {
@@ -74,6 +79,7 @@ public class Projectile {
 	public boolean move(Field t) {
 		if (t.isWalkable() ) {
 			this.field = t;
+			if(fieldLast == null || fieldLast.getLevel() != field.getLevel()) fieldLast = field;
 			return true;
 					
 		}
@@ -95,5 +101,15 @@ public class Projectile {
 			}
 			
 		}
+		
+		public double calcOffsetx() {
+			return  ((field.x - fieldLast.x) * ((100-speedc) / ((double) 100))); 
+		}
+		
+		public double calcOffsety() {
+			return ((field.y - fieldLast.y) * ((100-speedc) / ((double) 100))); 
+		}
+
+		public Field getField() { return field; }
 
 }

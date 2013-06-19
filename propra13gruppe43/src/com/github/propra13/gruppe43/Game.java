@@ -166,6 +166,7 @@ public class Game implements KeyInterface{
 	public void restoreToCheckpoint() {
 		player.restorePlayer();
 		player.field = null;
+		player.fieldLast = null;
 		player.move(checkpoint);
 		currentLevelId = checkpoint.getLevel().getId();
 	}
