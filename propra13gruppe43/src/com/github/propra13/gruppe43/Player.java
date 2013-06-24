@@ -10,6 +10,8 @@ public class Player extends Actor implements KeyInterface{
 	public Player() {
 		super();
 		type = PLAYER;
+		healthRegen = 0.01;
+		manaRegen = 0.05;
 		this.getInventory().setDrop(0);
 		this.getInventory().setPickup(true);
 		

@@ -6,18 +6,20 @@ import com.github.propra13.gruppe43.Items.Inventory;
 import com.github.propra13.gruppe43.Items.Item;
 public class Actor{
 	// energy wird benötigt um zu handeln
-	final int ENERGY_MAX = 1000;
-	public int energy = ENERGY_MAX;
-	public int energyGain = 6;
+	final double ENERGY_MAX = 1000;
+	public double energy = ENERGY_MAX;
+	public double energyGain = 6;
 	
 	//AI des Actors
 	AI ai = null;
 	
 	//Lebenspunkte und Mana
-	public int maxHealth = 100;
-	public int health = 100;
-	public int maxMana = 100;
-	public int mana = 100;
+	public double maxHealth = 100;
+	public double health = 100;
+	public double healthRegen = 0;
+	public double maxMana = 100;
+	public double mana = 100;
+	public double manaRegen = 0;
 	
 	//Inventar des Actors
 	Inventory inventory;
@@ -60,9 +62,9 @@ public class Actor{
 	Field field = null;
 	//benötigt für Anzeige
 	Field fieldLast = null;
-	int posSpeed = 0;
-	int maxPos = 10;
-	int currentPos = 0;
+	double posSpeed = 0;
+	double maxPos = 10;
+	double currentPos = 0;
 	
 	
 	public Actor() {
@@ -73,6 +75,10 @@ public class Actor{
 	public void act() {
 		if (this.state != 0) { //nur handeln, wenn der Player nicht tot ist
 			
+			//Leben und Mana regenerieren
+			changeHealth(healthRegen);
+			changeMana(manaRegen);
+			
 			//AI anwenden
 			if (ai != null) ai.useAI(this);
 
@@ -82,7 +88,7 @@ public class Actor{
 			//Energy erhöhen, handeln wenn genug Energy vorhanden ist
 			if (energy < ENERGY_MAX) {
 				changeEnergy(energyGain);
-				if (fieldLast != field) currentPos+=posSpeed;
+				if (fieldLast != field) currentPos=Math.min(currentPos+posSpeed, maxPos);
 			}
 			
 			else {
@@ -165,15 +171,15 @@ public class Actor{
 	}
 	
 	
-	public void changeMana(int a) {
+	public void changeMana(double a) {
 		mana = Math.min(maxMana, Math.max(0, mana+a));
 	}
 	
-	public void changeEnergy(int a) {
-		energy = Math.min(ENERGY_MAX, Math.max(0, energy+a));
+	public void changeEnergy(double a) {
+		energy = Math.min(ENERGY_MAX, energy+a);
 	}
 	
-	public void changeHealth(int a) {
+	public void changeHealth(double a) {
 		health = Math.min(maxHealth, Math.max(0, health+a));
 		if (health == 0) kill();
 	}
@@ -230,10 +236,10 @@ public class Actor{
 		changeMana(i);
 	}
 	public boolean isAlive() { return (state != 0); }
-	public int getHealth() { return this.health; }
-	public int getMaxHealth() { return this.maxHealth; }
-	public int getMana() {return this.mana; }
-	public int getMaxMana() { return this.maxMana; }
+	public double getHealth() { return this.health; }
+	public double getMaxHealth() { return this.maxHealth; }
+	public double getMana() {return this.mana; }
+	public double getMaxMana() { return this.maxMana; }
 	public Field getField() { return this.field; }
 	public Level getLevel() { return this.field.level; }
 	public Game getGame() {return this.field.level.game; }

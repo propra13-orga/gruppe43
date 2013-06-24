@@ -9,8 +9,9 @@ import com.github.propra13.gruppe43.Items.Weapon;
 public class Game implements KeyInterface{
 	//Anzahl der Levels, Levels des Spiels, und der Index des momentan aktiven Levels
 	int LEVEL_COUNT = 0;
+	String[] lvlpath;
 	int currentLevelId = 0;
-	Level[] levels = new Level[10];
+	Level[] levels;
 	//Ziel der Steuerung und KeyInput
 	KeyInput keys;
 	KeyInterface keyTarget;
@@ -21,19 +22,32 @@ public class Game implements KeyInterface{
 	Player player;
 	//Anzahl der Leben des Spielers
 	int lives;
-	//Status des Spiels: 0 = Spiel läuft, 1 = verloren, 2 = gewonnen
-	int state = 0;
+	//Status des Spiels: 0 = Spiel läuft, 1 = verloren, 2 = gewonnen, 3 = pausiert
+	int state = PAUSED;
+	public final static int RUNNING = 0;
+	public final static int LOST = 1;
+	public final static int WON = 2;
+	public final static int PAUSED = 3;
 	//aktiver Checkpoint
 	Field checkpoint;
 	
 	
 	
-	public Game(String[] lvlpath) {
+	public Game(String[] lvlp) {
+		lvlpath = lvlp;
+		keys = new KeyInput(this);
+		enterDialog(Dialog.createMainMenuDialog(this, "^_______^"));
+		
+	}
+	
+	public void launchGame() {
+		currentLevelId = 0;
 		LEVEL_COUNT = lvlpath.length;
 		player = new Player();
 		lives = 3;
 		keyTarget = player;
-		keys = new KeyInput(this);
+		
+		levels = new Level[10];
 		
 		//Levels laden
 		for (int i = 0; i<LEVEL_COUNT;i++) {
@@ -41,11 +55,14 @@ public class Game implements KeyInterface{
 			levels[i].init("lvl/"+lvlpath[i], this);
 		}
 		
+
+		
 		//Eingang des ersten und Ausgang des letzten Levels entfernen
 		setCheckpoint(levels[0].entrance);
 		levels[LEVEL_COUNT-1].exit.changeType(Field.OBJECTIVE);
 		player.move(levels[0].entrance, false);
 		prepareLevels();
+		state = RUNNING;
 		
 	}
 	
@@ -113,7 +130,7 @@ public class Game implements KeyInterface{
 	
 	//führt den nächsten Schritt des Spiels aus, ruft act() für alle Actors auf
 	public void updateGame() {
-		if (state == 0 && !dialogActive) {
+		if (state == RUNNING && !dialogActive) {
 			//alle Actors handeln lassen
 			int i = 0;
 			int a = getCurrentLevel().actors.size();
@@ -146,6 +163,16 @@ public class Game implements KeyInterface{
 				restoreToCheckpoint();
 				changeLives(-1);
 			}
+			
+			//Spiel verloren, wenn Spieler tot und leblos
+			if (getLives() == 0 && !player.isAlive()) {
+				state = LOST;
+			}
+			
+			if (state == WON) enterDialog(Dialog.createMainMenuDialog(this, "Gewonnen! :---------D"));
+		
+			if (state == LOST) enterDialog(Dialog.createMainMenuDialog(this, "Verloren... -,      -"));
+			
 		}
 		
 	}

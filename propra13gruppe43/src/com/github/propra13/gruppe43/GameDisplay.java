@@ -18,8 +18,10 @@ import com.github.propra13.gruppe43.Items.Inventory;
 public class GameDisplay {
 	public final static int TILE_WIDTH = 32;
 	public final static int TILE_HEIGHT = 32;
-	public final static int WINDOW_SIZE_X = 16*TILE_WIDTH;
-	public final static int WINDOW_SIZE_Y = 12*TILE_HEIGHT;
+	public final static int BLOCKS_X = 16;
+	public final static int BLOCKS_Y = 12;
+	public final static int WINDOW_SIZE_X = BLOCKS_X*TILE_WIDTH;
+	public final static int WINDOW_SIZE_Y = BLOCKS_Y*TILE_HEIGHT;
 	
 	//Bild, das angezeigt wird
 	BufferedImage display;
@@ -80,27 +82,36 @@ public class GameDisplay {
 	
 	//zeichnet das gesamte Bild, das angezeigt werden soll
 	public void updateDisplay() {
-		int width = game.getCurrentLevel().size_x*TILE_WIDTH;
-		int height = game.getCurrentLevel().size_y*TILE_HEIGHT;
-		int focusX = (int) ((focus.getField().x-focus.calcOffsetx())*TILE_WIDTH+16);
-		int focusY = (int) ((focus.getField().y-focus.calcOffsety())*TILE_HEIGHT+16);
-		int displayX;
-		int displayY;
+		Graphics2D displayG;
+		displayG = (Graphics2D) display.getGraphics();
 		
-		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = (Graphics2D) img.getGraphics();
-		drawFields(g, game.getCurrentLevel());
-		drawActors(g, game.getCurrentLevel());
-		drawProjectiles(g, game.getCurrentLevel());
-		drawEffects(g, game.getCurrentLevel());
+		if (game.state != Game.PAUSED) {
+			
+			focus = game.player;
+			
+			int width = game.getCurrentLevel().size_x*TILE_WIDTH;
+			int height = game.getCurrentLevel().size_y*TILE_HEIGHT;
+			int focusX = (int) ((focus.getField().x-focus.calcOffsetx())*TILE_WIDTH+16);
+			int focusY = (int) ((focus.getField().y-focus.calcOffsety())*TILE_HEIGHT+16);
+			int displayX;
+			int displayY;
+			
+			BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = (Graphics2D) img.getGraphics();
+			drawFields(g, game.getCurrentLevel());
+			drawActors(g, game.getCurrentLevel());
+			drawProjectiles(g, game.getCurrentLevel());
+			drawEffects(g, game.getCurrentLevel());
+			
+			displayX = Math.max(0, Math.min(focusX-(WINDOW_SIZE_X/2), width-WINDOW_SIZE_X));
+			displayY = Math.max(0, Math.min(focusY-(WINDOW_SIZE_Y/2), height-WINDOW_SIZE_Y));
+			display = new BufferedImage(WINDOW_SIZE_X, WINDOW_SIZE_Y, BufferedImage.TYPE_INT_ARGB);
+			displayG = (Graphics2D) display.getGraphics();
+			displayG.drawImage(img.getSubimage(displayX, displayY, Math.min(WINDOW_SIZE_X, width-displayX), Math.min(WINDOW_SIZE_Y, height-displayY)), 0, 0, null);
+			drawUI(displayG);
+		}
 		
-		displayX = Math.max(0, Math.min(focusX-(WINDOW_SIZE_X/2), width-WINDOW_SIZE_X));
-		displayY = Math.max(0, Math.min(focusY-(WINDOW_SIZE_Y/2), height-WINDOW_SIZE_Y));
-		display = new BufferedImage(WINDOW_SIZE_X, WINDOW_SIZE_Y, BufferedImage.TYPE_INT_ARGB);
-		display.getGraphics().drawImage(img.getSubimage(displayX, displayY, Math.min(WINDOW_SIZE_X, width-displayX), Math.min(WINDOW_SIZE_Y, height-displayY)), 0, 0, null);
-		g = (Graphics2D) display.getGraphics();
-		drawUI(g);
-		if (game.dialogActive) drawDialog(g, game.dialog);
+		if (game.dialogActive) drawDialog(displayG, game.dialog);
 	}
 	
 	//Gibt das Bild zurück
@@ -169,11 +180,22 @@ public class GameDisplay {
 			int offx = (int) ((a.getField().x-a.calcOffsetx())*TILE_WIDTH);
 			int offy = (int) ((a.getField().y-a.calcOffsety())*TILE_HEIGHT);
 			g.drawImage(img, offx, offy, TILE_WIDTH, TILE_HEIGHT, null);
+			
 			for (int k=0; k<Inventory.EQSLOTS; k++) {
 				if (a.getInventory().getEquipment(k) != null) {
 					img = actorItemImages[a.getInventory().getEquipment(k).getId()];
 					g.drawImage(img, offx, offy, TILE_WIDTH, TILE_HEIGHT, null);
 				}
+			}
+			
+			if (a.getHealth() != a.getMaxHealth() && a != game.player) {
+				g.setStroke(new BasicStroke(1));
+				g.setColor(new Color(255, 255, 255));
+				g.fillRect(offx, offy, TILE_WIDTH, TILE_HEIGHT/10); 
+				g.setColor(new Color(200, 0, 0));
+				g.fillRect(offx, offy, (int) (TILE_WIDTH*(a.getHealth()/a.getMaxHealth())), TILE_HEIGHT/10); 
+				g.setColor(new Color(0, 0, 0));
+				g.drawRect(offx, offy, TILE_WIDTH, TILE_HEIGHT/10); 
 			}
 		}
 	}
@@ -211,29 +233,29 @@ public class GameDisplay {
 	private void drawUI(Graphics2D g) {
 		//UI-Leiste zeichnen
 		g.setColor(new Color(210, 105, 30));
-		g.fillRect(TILE_WIDTH, WINDOW_SIZE_Y-TILE_HEIGHT,(int) (WINDOW_SIZE_X*0.8), TILE_HEIGHT); 
+		g.fillRect(TILE_WIDTH, WINDOW_SIZE_Y-TILE_HEIGHT, (BLOCKS_X-2)*TILE_WIDTH, TILE_HEIGHT); 
 		g.setColor(new Color(0, 0, 0));
 		g.setStroke(new BasicStroke(3));
-		g.drawRect(TILE_WIDTH, WINDOW_SIZE_Y-TILE_HEIGHT,(int) (WINDOW_SIZE_X*0.8), TILE_HEIGHT); 
+		g.drawRect(TILE_WIDTH, WINDOW_SIZE_Y-TILE_HEIGHT,  (BLOCKS_X-2)*TILE_WIDTH, TILE_HEIGHT); 
 		//Lebensleiste zeichnen
 		g.setStroke(new BasicStroke(2));
 		g.setColor(new Color(255, 255, 255));
-		g.fillRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/8)*7,(int) (WINDOW_SIZE_X*0.2), TILE_HEIGHT/3); 
+		g.fillRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/8)*7, TILE_WIDTH*(BLOCKS_X/4), TILE_HEIGHT/3); 
 		g.setColor(new Color(200, 0, 0));
-		g.fillRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/8)*7,(int) (WINDOW_SIZE_X*((double) focus.getHealth()/focus.getMaxHealth())*0.2), TILE_HEIGHT/3); 
+		g.fillRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/8)*7,(int) (TILE_WIDTH*(BLOCKS_X/4)*(focus.getHealth()/focus.getMaxHealth())), TILE_HEIGHT/3); 
 		g.setColor(new Color(0, 0, 0));
-		g.drawRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/8)*7,(int) (WINDOW_SIZE_X*0.2), TILE_HEIGHT/3); 
+		g.drawRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/8)*7, TILE_WIDTH*(BLOCKS_X/4), TILE_HEIGHT/3); 
 		//Manaleiste zeichnen
 		g.setColor(new Color(255, 255, 255));
-		g.fillRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/16)*7,(int) (WINDOW_SIZE_X*0.2), TILE_HEIGHT/3); 
+		g.fillRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/16)*7, TILE_WIDTH*(BLOCKS_X/4), TILE_HEIGHT/3); 
 		g.setColor(new Color(0, 100, 255));
-		g.fillRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/16)*7,(int) (WINDOW_SIZE_X*((double) focus.getMana()/focus.getMaxMana())*0.2), TILE_HEIGHT/3);  
+		g.fillRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/16)*7,(int) (TILE_WIDTH*(BLOCKS_X/4)*(focus.getMana()/focus.getMaxMana())), TILE_HEIGHT/3);  
 		g.setColor(new Color(0, 0, 0));
-		g.drawRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/16)*7,(int) (WINDOW_SIZE_X*0.2), TILE_HEIGHT/3); 
+		g.drawRect(TILE_WIDTH+5, WINDOW_SIZE_Y-(TILE_HEIGHT/16)*7, TILE_WIDTH*(BLOCKS_X/4), TILE_HEIGHT/3); 
 		//Leben
-		g.setFont(new Font("Arial", Font.BOLD, 12));
-		g.drawString(("Leben: " + game.getLives()), (float) (WINDOW_SIZE_X*0.22+TILE_WIDTH+5), (float) (WINDOW_SIZE_Y-TILE_HEIGHT/2));		
-		g.drawString(("Gold: " + game.player.getInventory().getGold()), (float) (WINDOW_SIZE_X*0.22+TILE_WIDTH+5), (float) (WINDOW_SIZE_Y-TILE_HEIGHT/6));		
+		g.setFont(new Font("Arial", Font.BOLD, (TILE_HEIGHT*2)/5));
+		g.drawString(("Leben: " + game.getLives()), (TILE_WIDTH*(BLOCKS_X/4)+TILE_WIDTH+10), WINDOW_SIZE_Y-(TILE_HEIGHT*7)/8+TILE_HEIGHT/3);		
+		g.drawString(("Gold: " + game.player.getInventory().getGold()), (TILE_WIDTH*(BLOCKS_X/4)+TILE_WIDTH+10), WINDOW_SIZE_Y-(TILE_HEIGHT*7)/16+TILE_HEIGHT/3);		
 		
 		
 	}
@@ -287,6 +309,29 @@ public class GameDisplay {
 				g.drawString(String.valueOf(d.inventory.items.get(i).getCost()), offsetx+200, offsety);
 				}
 				else g.drawString("Shop verlassen", offsetx, offsety);
+							
+			}
+			
+		}
+		
+		if (dialog.type == Dialog.MAIN_MENU) {
+			int offsetx = (int) (WINDOW_SIZE_X*0.1);
+			int offsety = (int) (WINDOW_SIZE_Y*0.1);
+			MainMenuDialog d = (MainMenuDialog) dialog;
+			g.setColor(new Color(255, 255, 255));
+			g.fillRect(offsetx, offsety, (int) (WINDOW_SIZE_X*0.8), (int) (WINDOW_SIZE_Y*0.8));
+			g.setStroke(new BasicStroke(3));
+			g.setColor(new Color(0, 0, 0));
+			g.drawRect((int) offsetx, (int) offsety, (int) (WINDOW_SIZE_X*0.8), (int) (WINDOW_SIZE_Y*0.8));
+			g.setFont(new Font("Arial", Font.BOLD, 15));
+			offsetx+=30;
+			offsety+=30;
+			g.drawString((d.headline), offsetx, offsety);
+			g.setFont(new Font("Arial", Font.PLAIN, 15));
+			for (int i = 0; i<d.options.length; i++) {
+				offsety+=20;
+				if (i==d.selectionIndex) g.drawString("->", offsetx-20, offsety);
+				g.drawString(d.options[i], offsetx, offsety);
 							
 			}
 			
