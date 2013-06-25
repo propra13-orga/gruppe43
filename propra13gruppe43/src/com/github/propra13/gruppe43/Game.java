@@ -61,71 +61,10 @@ public class Game implements KeyInterface{
 		setCheckpoint(levels[0].entrance);
 		levels[LEVEL_COUNT-1].exit.changeType(Field.OBJECTIVE);
 		player.move(levels[0].entrance, false);
-		prepareLevels();
 		state = RUNNING;
 		
 	}
 	
-	public void prepareLevels() {
-		//Level 1
-		String[] text = {"Es ist gefährlich zu gehen alleine.", "Nimm dies.", " ", "(Benutze 'A' und die Pfeiltasten um anzugreifen.)", "(Benutze SPACE um diesen Dialog zu beenden.)"};
-		TextNPC guy = new TextNPC("Hans",text);
-		guy.move(levels[0].getField(5, 1), true);
-		levels[0].getField(6, 1).addItem(Item.createItem(Item.ID_SWORD));
-		//Level 2
-		Enemy boy = new Enemy(Actor.ENEMY, new PatrolAI(player, 1, 0), 50, 50, 3, 1);
-		boy.move(levels[1].getField(10, 3), false);
-		boy.getInventory().equipItem(Item.createItem(Item.ID_SWORD));
-		boy = new Enemy(Actor.ENEMY, new PatrolAI(player, 1, 0), 50, 50, 3, 1);
-		boy.move(levels[1].getField(7, 5), false);
-		boy.getInventory().equipItem(Item.createItem(Item.ID_SWORD));
-		boy = new Enemy(Actor.ENEMY, new PatrolAI(player, 1, 0), 50, 50, 3, 1);
-		boy.move(levels[1].getField(8, 7), false);
-		boy.getInventory().equipItem(Item.createItem(Item.ID_SWORD));
-		boy = new Enemy(Actor.ENEMY, new PatrolAI(player, 1, 0), 50, 50, 3, 1);
-		boy.move(levels[1].getField(5, 9), false);
-		boy.getInventory().equipItem(Item.createItem(Item.ID_SWORD));
-		boy.getInventory().items.add(Item.createItem(Item.ID_HEALTH_POTION));
-		//Level 3
-		levels[2].entrance.changeType(Field.FLOOR);
-		levels[2].exit.changeType(Field.FLOOR);
-		Boss dude = new Boss( new FindAI(player), 150, 0, 3, 1);
-		dude.getInventory().changeGold(200);
-		dude.move(levels[2].getField(15, 2), false);
-		dude.getInventory().equipItem(Item.createItem(Item.ID_SWORD));
-		//Level 4
-		ShopNPC man = new ShopNPC("Verkäufer"); 
-		man.getInventory().items.add(Item.createItem(Item.ID_AXE));
-		man.getInventory().items.add(Item.createItem(Item.ID_TRASH_ARMOR));
-		man.move(levels[3].getField(1, 1), true);
-		//Level 5
-		levels[4].getField(1, 1).addItem(Item.createItem(Item.ID_SPELLBOOK_FIREBALL));
-		boy = new Enemy(Actor.ENEMY, new PatrolAI(player, 0, 1), 75, 50, 5, 1);
-		boy.move(levels[1].getField(8, 7), false);
-		boy.getInventory().equipItem(Item.createItem(Item.ID_AXE));
-		//Level 6
-		levels[5].getField(2, 2).addItem(Item.createItem(Item.ID_MANA_POTION));
-		levels[5].entrance.changeType(Field.FLOOR);
-		levels[5].exit.changeType(Field.FLOOR);
-		dude = new Boss( new FindAI(player), 200, 0, 5, 1);
-		dude.getInventory().changeGold(500);
-		dude.move(levels[5].getField(15, 2), false);
-		dude.getInventory().equipItem(Item.createItem(Item.ID_AXE));	
-		//Level 7
-		//Level 8
-		man = new ShopNPC("Verkäufer"); 
-		man.getInventory().items.add(Item.createItem(Item.ID_VICTORY_ARMOR));
-		man.getInventory().setDrop(1);
-		man.move(levels[7].getField(1, 1), true);
-		//Level 9
-		levels[8].entrance.changeType(Field.FLOOR);
-		levels[8].exit.changeType(Field.FLOOR);
-		dude = new Boss( new FindAI(player), 300, 0, 8, 1);
-		dude.getInventory().changeGold(9000);
-		dude.move(levels[8].getField(15, 2), false);
-		dude.getInventory().equipItem(Item.createItem(Item.ID_AXE));
-		
-	}
 	
 	
 	//führt den nächsten Schritt des Spiels aus, ruft act() für alle Actors auf
