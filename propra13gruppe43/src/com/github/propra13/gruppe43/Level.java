@@ -95,12 +95,12 @@ public class Level {
 			break;
 		//Level 2
 		case 'b':
-			Enemy boy = new Enemy(Actor.ENEMY, new PatrolAI(game.player, 1, 0), 50, 50, 3, 1);
+			Enemy boy = new Enemy(Actor.ENEMY, new PatrolAI(game.player, 1, 0), 50, 50, 1.5, 1);
 			boy.move(t, false);
 			boy.getInventory().equipItem(Item.createItem(Item.ID_SWORD));
 			break;
 		case 'c':
-			boy = new Enemy(Actor.ENEMY, new PatrolAI(game.player, 1, 0), 50, 50, 3, 1);
+			boy = new Enemy(Actor.ENEMY, new PatrolAI(game.player, 1, 0), 50, 50, 1.5, 1);
 			boy.move(t, false);
 			boy.getInventory().equipItem(Item.createItem(Item.ID_SWORD));
 			boy.getInventory().items.add(Item.createItem(Item.ID_HEALTH_POTION));
@@ -112,7 +112,7 @@ public class Level {
 			man.move(t, true);
 			break;
 		case 'e':
-			boy = new Enemy(Actor.ENEMY, new PatrolAI(game.player, 0, 1), 75, 50, 5, 1);
+			boy = new Enemy(Actor.ENEMY, new PatrolAI(game.player, 0, 1), 75, 50, 2.5, 1);
 			boy.move(t, false);
 			boy.getInventory().equipItem(Item.createItem(Item.ID_AXE));
 			break;
@@ -124,19 +124,19 @@ public class Level {
 			break;
 			
 		case 'o':
-			boss = new Boss( new FindAI(game.player), 150, 0, 3, 1);
+			boss = new Boss( new FindAI(game.player), 150, 0, 1.5, 1);
 			boss.getInventory().changeGold(200);
 			boss.move(t, false);
 			boss.getInventory().equipItem(Item.createItem(Item.ID_SWORD));
 			break;
 		case 'p':
-			boss = new Boss( new FindAI(game.player), 200, 0, 5, 1);
+			boss = new Boss( new FindAI(game.player), 200, 0, 2.5, 1);
 			boss.getInventory().changeGold(300);
 			boss.move(t, false);
 			boss.getInventory().equipItem(Item.createItem(Item.ID_AXE));
 			break;
 		case 'q':
-			boss = new Boss( new FindAI(game.player), 300, 0, 8, 1);
+			boss = new Boss( new FindAI(game.player), 300, 0, 4, 1);
 			boss.getInventory().changeGold(9000);
 			boss.move(t, false);
 			boss.getInventory().equipItem(Item.createItem(Item.ID_AXE));

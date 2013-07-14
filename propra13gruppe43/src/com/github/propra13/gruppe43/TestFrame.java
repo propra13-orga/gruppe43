@@ -23,14 +23,14 @@ public class TestFrame extends JFrame{
 			}
 		};
 
-		timer = new Timer(20, new ActionListener() {
+		timer = new Timer(10, new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				game.updateGame();
 				display.updateDisplay();
 				repaint();
 			}});
 		
-		panel.setPreferredSize(new Dimension(GameDisplay.WINDOW_SIZE_X-10,GameDisplay.WINDOW_SIZE_Y-10));
+		panel.setPreferredSize(new Dimension(GameDisplay.WINDOW_SIZE_X,GameDisplay.WINDOW_SIZE_Y));
 		panel.addKeyListener(game.keys);
 		this.add(panel);
 		

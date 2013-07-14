@@ -15,7 +15,7 @@ public class Field {
 	public final static char TRAP = 'T';
 	public final static char OBJECTIVE = 'D';
 	public final static char CHECKPOINT = 'C';
-	public final static char ACTIVE_CHECKPOINT = 'c';
+	public final static char ACTIVE_CHECKPOINT = 'B';
 	
 	//Koordinaten des Feldes
 	int x;

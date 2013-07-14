@@ -2,7 +2,7 @@ package com.github.propra13.gruppe43;
 
 public class Boss extends Enemy {
 
-	public Boss( AI a, int h, int m, int speed, int drop) {
+	public Boss( AI a, int h, int m, double speed, int drop) {
 		super(BOSS, a, h, m, speed, drop);
 	}
 

@@ -4,7 +4,7 @@ public class Enemy extends Actor {
 	
 	
 	//Typ, AI des Actors, Max. Leben, Max. Mana, energyGain, drop gibt an wie Items fallen gelassen werden
-	public Enemy(int tp, AI a, int h, int m, int speed, int drop) {
+	public Enemy(int tp, AI a, int h, int m, double speed, int drop) {
 		super();
 		type = tp;
 		ai = a;

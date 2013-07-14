@@ -1,14 +1,26 @@
 package com.github.propra13.gruppe43;
-import java.awt.image.*;
+import java.awt.image.*; 
 import java.util.*;
-
 import com.github.propra13.gruppe43.Items.Inventory;
 import com.github.propra13.gruppe43.Items.Item;
+
+
+/**
+ * Die Klasse Actor stellt ein im Spiel handelndes Objekt dar, beispielsweise den Spieler, Gegner und alle NPCs.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 public class Actor{
 	// energy wird benötigt um zu handeln
 	final double ENERGY_MAX = 1000;
 	public double energy = ENERGY_MAX;
-	public double energyGain = 6;
+	public double energyGain = 12;
 	
 	//AI des Actors
 	AI ai = null;
