@@ -2,10 +2,14 @@ package com.github.propra13.gruppe43;
 
 import java.awt.event.KeyEvent;
 
+import com.github.propra13.gruppe43.Dialogs.Dialog;
 import com.github.propra13.gruppe43.Items.Armor;
 import com.github.propra13.gruppe43.Items.Item;
 import com.github.propra13.gruppe43.Items.Weapon;
-
+/** Die Klasse Game steuert den Verlauf des Spiels. Sie verwaltet Dialoge, startet das Spiel und führt die Spielzüge aus,
+ * indem sie alle im Spiel befindlichen Objekte handeln lässt.
+ * Game steuert außerdem, wie auf User-Input reagiert wird.
+ */
 public class Game implements KeyInterface{
 	//Anzahl der Levels, Levels des Spiels, und der Index des momentan aktiven Levels
 	int LEVEL_COUNT = 0;
@@ -59,7 +63,7 @@ public class Game implements KeyInterface{
 		
 		//Eingang des ersten und Ausgang des letzten Levels entfernen
 		setCheckpoint(levels[0].entrance);
-		levels[LEVEL_COUNT-1].exit.changeType(Field.OBJECTIVE);
+		levels[LEVEL_COUNT-1].exit.changeType(Field.FLOOR);
 		player.move(levels[0].entrance, false);
 		state = RUNNING;
 		
@@ -129,7 +133,7 @@ public class Game implements KeyInterface{
 		checkpoint = t;
 	}
 	
-	public void restoreToCheckpoint() {
+	private void restoreToCheckpoint() {
 		player.restorePlayer();
 		player.field = null;
 		player.fieldLast = null;

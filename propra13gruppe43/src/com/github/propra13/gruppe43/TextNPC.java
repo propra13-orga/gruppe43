@@ -1,5 +1,7 @@
 package com.github.propra13.gruppe43;
 
+import com.github.propra13.gruppe43.Dialogs.Dialog;
+
 public class TextNPC extends Actor {
 	String[] text;
 	String headline;

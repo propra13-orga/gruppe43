@@ -2,10 +2,12 @@ package com.github.propra13.gruppe43.Items;
 
 import com.github.propra13.gruppe43.Actor;
 import com.github.propra13.gruppe43.DamageTypes;
-
+/**
+ * Klasse für Waffen-Gegenstände.
+ */
 public class Armor extends Item {
 	double damageFactor;
-	int damageReduction;
+	double damageReduction;
 	
 	public Armor(int ID) {
 		id = ID;
@@ -32,8 +34,8 @@ public class Armor extends Item {
 	}
 	
 	//wird ausgelöst wenn Actor a, der dieses Item trägt, durch Actor b Schaden vom Typ dType nimmt
-		public int whenHit(Actor a, Actor attacker, int damage, int dType)  {
-			if (dType == DamageTypes.PHYSICAL) damage = (int) (damageFactor * (damage-damageReduction));
+		public double whenHit(Actor a, Actor attacker, double damage, int dType)  {
+			if (dType == DamageTypes.PHYSICAL) damage = (damageFactor * (damage-damageReduction));
 			return damage;
 		}
 }

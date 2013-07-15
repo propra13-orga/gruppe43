@@ -7,20 +7,17 @@ import com.github.propra13.gruppe43.Items.Item;
 
 /**
  * Die Klasse Actor stellt ein im Spiel handelndes Objekt dar, beispielsweise den Spieler, Gegner und alle NPCs.
+ * Sie enthält Informationen zu Leben, Mana und Inventar des Actors und Methoden mit denen sich der Actor bewegen,
+ * angreifen oder anderen Actors Schaden zufügen kann.
  * 
- * 
- * 
- * 
- * 
- * 
- * 
+ * Die Methode act() gibt an, wie sich der Actor während eines Spielzuges verhält.
  * 
  */
 public class Actor{
 	// energy wird benötigt um zu handeln
 	final double ENERGY_MAX = 1000;
 	public double energy = ENERGY_MAX;
-	public double energyGain = 12;
+	public double energyGain = 3;
 	
 	//AI des Actors
 	AI ai = null;
@@ -145,8 +142,12 @@ public class Actor{
 	}
 	
 	
-	//bewegt den Actor aus das Zielfeld, gibt true zurück, falls erfolgreich, sonst false
-	//entry gibt an, ob die Methode onEntry des Zielfeldes ausgelöst wird
+	/**
+	 * Versucht den Actor auf das angegebene Feld zu bewegen.
+	 * @param t Feld, auf das der Actor bewegt werden soll.
+	 * @param entry Wenn 'true', wird die Methode onEntry() des Zielfeldes aufgerufen (z.B. werden Fallen ausgelöst).
+	 * @return Gibt 'true' zurück, falls die Bewegung erfolgreich war, sonst 'false'.
+	 */
 	public boolean move(Field t, boolean entry) {
 		if (!t.isOccupied() ) {
 			t.actor = this;
@@ -168,7 +169,7 @@ public class Actor{
 	}
 	
 	//greift in die Richtung, in die der Actor schaut, an
-	public boolean attack() {
+	private boolean attack() {
 		if (hasEquipped(Item.TYPE_WEAPON)) {
 			inventory.getEquipment(Item.TYPE_WEAPON).onHit(this, getLevel().getField(field.x+facex, field.y+facey), facex, facey);
 			return true;
@@ -177,20 +178,35 @@ public class Actor{
 	}
 	
 	
-	//wird ausgelöst, wennd er Spieler mit diesem Objekt interagiert
+	/**
+	 * Lässt einen anderen Actor mit diesem Actor interagieren.
+	 * @param a Der Actor, der mit diesem Actor interagiert.
+	 */
 	public void interacted(Actor a) {
 			
 	}
 	
-	
+	/**
+	 * Verändert das momentane Mana des Actors um einen Offset.
+	 * Kann nicht 0 unterschreiten oder das maximale Mana das Actors überschreiten.
+	 * @param a Wird zum Mana des Actors addiert.
+	 */
 	public void changeMana(double a) {
 		mana = Math.min(maxMana, Math.max(0, mana+a));
 	}
-	
+	/**
+	 * Verändert die momentane Energie des Actors um einen Offset.
+	 * Kann nicht 0 unterschreiten oder die maximale Energie das Actors überschreiten.
+	 * @param a Wird zur Energie des Actors addiert.
+	 */
 	public void changeEnergy(double a) {
 		energy = Math.min(ENERGY_MAX, energy+a);
 	}
-	
+	/**
+	 * Verändert das momentane Leben des Actors um einen Offset.
+	 * Kann nicht 0 unterschreiten oder das maximale Leben das Actors überschreiten.
+	 * @param a Wird zum Leben des Actors addiert.
+	 */
 	public void changeHealth(double a) {
 		health = Math.min(maxHealth, Math.max(0, health+a));
 		if (health == 0) kill();
@@ -198,7 +214,9 @@ public class Actor{
 	
 	//
 	
-	//zerberstet den Actor
+	/**
+	 * Entfernt diesen Actor aus dem Spiel, lässt gegebenfalls Items fallen und gibt Erfahrung an die Spieler.
+	 */
 	public void kill() {
 		state = 0;
 		getLevel().removeActor(this);
@@ -207,14 +225,24 @@ public class Actor{
 		
 	}
 
-	//verursacht Schaden in Höhe von damage vom Typ dType am Actor a
-	public void dealDamage(Actor a, int damage, int dType) {
+	/**
+	 * Lässt diesen Actor einem anderen Actor Schaden zufügen.
+	 * @param a Actor, dem der Schaden zugefügt werden soll.
+	 * @param damage Schadenswert.
+	 * @param dType Schadenstyp.
+	 */
+	public void dealDamage(Actor a, double damage, int dType) {
 		a.takeDamage(this, damage, dType);
 		
 	}
 	
-	//nimmt Schaden in Höhe von damage vom Typ dType durch den Actor a, eventuell modifiziert durch Rüstung
-	public void takeDamage(Actor a, int damage, int dType) {
+	/**
+	 * Fügt diesem Actor Schaden zu. 
+	 * @param a Actor, der diesem Actor Schaden zufügt, kann 'null' sein.
+	 * @param damage Schadenswert.
+	 * @param dType Schadenstyp.
+	 */
+	public void takeDamage(Actor a, double damage, int dType) {
 		
 		if (this.hasEquipped(Item.TYPE_ARMOR))  damage = this.getInventory().getEquipment(Item.TYPE_ARMOR).whenHit(this, a, damage, dType);
 
@@ -222,7 +250,11 @@ public class Actor{
 		
 		
 	}
-	
+	/**
+	 * Fügt dem Actor einen neuen Zauber hinzu, sofern die maximale Anzahl an Zaubern noch nicht erreicht ist.
+	 * @param spell Der Zauber, der hinzugefügt werden soll.
+	 * @return Gibt 'true' zurück, wenn der Zauber hinzugefügt wurde, sonst 'false.
+	 */
 	public boolean addSpell(Spell spell) {
 		for (int i = 0; i<SPELL_NUMBER; i++) {
 			if (spells[i] == null ) {
@@ -235,7 +267,6 @@ public class Actor{
 		return false;
 	}
 	
-	public Inventory getInventory() { return this.inventory; }
 	public boolean hasEquipped(int i) {return this.getInventory().hasEquipped(i); }
 	
 	public void setMaxHealth(int i) {
@@ -252,11 +283,14 @@ public class Actor{
 	public double getMaxHealth() { return this.maxHealth; }
 	public double getMana() {return this.mana; }
 	public double getMaxMana() { return this.maxMana; }
+	public Inventory getInventory() { return this.inventory; }
 	public Field getField() { return this.field; }
 	public Level getLevel() { return this.field.level; }
 	public Game getGame() {return this.field.level.game; }
 	
 
+	
+	
 	public Field getFieldLast() { return this.fieldLast; }
 	
 	public double calcOffsetx() {

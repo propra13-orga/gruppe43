@@ -2,7 +2,9 @@ package com.github.propra13.gruppe43.Items;
 
 import com.github.propra13.gruppe43.Actor;
 import com.github.propra13.gruppe43.Spell;
-
+/**
+ * Klasse für Powerup-Gegenstände. Powerups werden beim Aufsammeln ausgelöst.
+ */
 public class Powerup extends Item {
 	
 	int value;

@@ -1,10 +1,17 @@
 package Effects;
 
+import com.github.propra13.gruppe43.Actor;
+import com.github.propra13.gruppe43.DamageTypes;
 import com.github.propra13.gruppe43.Field;
 
 public class Effect {
 	//Dauer des Effektes
 	int duration;
+	//Besitzer des Effektes
+	Actor owner;
+	//Schaden des Effektes
+	double damage;
+	int dType;
 	//Typ des Effektes
 	public int type;
 	//Effekt-Typen
@@ -16,10 +23,13 @@ public class Effect {
 	public Field target;
 	
 	
-	public Effect(Field t, int tp) {
+	public Effect(Actor a, Field t, int tp, double d, int dmgType) {
 		type = tp;
 		target = t;
 		target.getLevel().addEffect(this);
+		owner = a;
+		damage = d;
+		dType = dmgType;
 		state = 0;
 		switch (type) {
 		case SLASH:
@@ -41,6 +51,7 @@ public class Effect {
 			switch (type) {
 			case SLASH:
 				state = (int) (4 - duration/(2.5));
+				if (duration == 5)	if (target.isOccupied()) owner.dealDamage(target.getActor(), damage, DamageTypes.PHYSICAL);
 				break;
 			default:
 				break;

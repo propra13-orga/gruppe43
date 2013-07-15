@@ -1,8 +1,10 @@
 package com.github.propra13.gruppe43.Items;
-
 import com.github.propra13.gruppe43.Actor;
 import com.github.propra13.gruppe43.Field;
 
+/**
+ * Superklasse für Gegenstände.
+ */
 public class Item {
 	//Typ des Items und ID des Items
 	public int type = 0;
@@ -65,7 +67,7 @@ public class Item {
 		
 	}
 	//wird ausgelöst wenn Actor a, der dieses Item trägt, durch Actor b Schaden vom Typ dType nimmt, gibt den durch Rüstung modifizierten Schadenswert zurück
-	public int whenHit(Actor a, Actor attacker, int damage, int dType)  {
+	public double whenHit(Actor a, Actor attacker, double damage, int dType)  {
 		return damage;
 	}
 	

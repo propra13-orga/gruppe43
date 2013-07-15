@@ -2,16 +2,22 @@ package com.github.propra13.gruppe43;
 
 import java.awt.image.BufferedImage;
 
+import com.github.propra13.gruppe43.Dialogs.Dialog;
 import com.github.propra13.gruppe43.Items.Inventory;
 import com.github.propra13.gruppe43.Items.Item;
+
+/**
+ * Die Klasse Player stellt einen Actor dar, der vom Spieler gesteuert wird.
+ *
+ */
 
 public class Player extends Actor implements KeyInterface{
 	
 	public Player() {
 		super();
 		type = PLAYER;
-		healthRegen = 0.01;
-		manaRegen = 0.05;
+		healthRegen = 0.005;
+		manaRegen = 0.025;
 		this.getInventory().setDrop(0);
 		this.getInventory().setPickup(true);
 		
@@ -28,8 +34,7 @@ public class Player extends Actor implements KeyInterface{
 		energy = 500;
 	}
 	
-	//bewegt den Actor aus das Zielfeld, gibt true zurück, falls erfolgreich, sonst false
-	//entry gibt an, ob die Methode onEntry des Zielfeldes ausgelöst wird
+
 	public boolean move(Field t, boolean entry) {
 		//interagieren, falls sich ein Actor auf dem Zielfeld befindet
 		if (t.isOccupied()) t.getActor().interacted(this);
@@ -140,6 +145,8 @@ public void released(String key) {
 		break;
 	case "space":
 		break;
+	case "i":
+		getGame().enterDialog(Dialog.createInventoryDialog(this));
 	default:
 		break;
 	}

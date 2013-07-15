@@ -13,7 +13,13 @@ import javax.imageio.ImageIO;
 
 import Effects.Effect;
 
+import com.github.propra13.gruppe43.Dialogs.Dialog;
+import com.github.propra13.gruppe43.Dialogs.InventoryDialog;
+import com.github.propra13.gruppe43.Dialogs.MainMenuDialog;
+import com.github.propra13.gruppe43.Dialogs.ShopDialog;
+import com.github.propra13.gruppe43.Dialogs.TextDialog;
 import com.github.propra13.gruppe43.Items.Inventory;
+import com.github.propra13.gruppe43.Items.Item;
 
 public class GameDisplay {
 	public final static int TILE_WIDTH = 32;
@@ -309,6 +315,49 @@ public class GameDisplay {
 				g.drawString(String.valueOf(d.inventory.items.get(i).getCost()), offsetx+200, offsety);
 				}
 				else g.drawString("Shop verlassen", offsetx, offsety);
+							
+			}
+			
+		}
+		
+		if (dialog.type == Dialog.INVENTORY) {
+			int offsetx = (int) (WINDOW_SIZE_X*0.1);
+			int offsety = (int) (WINDOW_SIZE_Y*0.1);
+			InventoryDialog d = (InventoryDialog) dialog;
+			g.setColor(new Color(255, 255, 255));
+			g.fillRect(offsetx, offsety, (int) (WINDOW_SIZE_X*0.8), (int) (WINDOW_SIZE_Y*0.8));
+			g.setStroke(new BasicStroke(3));
+			g.setColor(new Color(0, 0, 0));
+			g.drawRect((int) offsetx, (int) offsety, (int) (WINDOW_SIZE_X*0.8), (int) (WINDOW_SIZE_Y*0.8));
+			g.setFont(new Font("Arial", Font.BOLD, 15));
+			offsetx+=30;
+			offsety+=30;
+			g.drawString((d.headline), offsetx, offsety);
+			
+			g.setFont(new Font("Arial", Font.BOLD, 15));
+			g.drawString("Waffe:", offsetx+200, offsety);
+			g.drawString("Rüstung:", offsetx+200, offsety+40);
+			
+			g.setFont(new Font("Arial", Font.PLAIN, 15));
+			if (d.inventory.hasEquipped(Item.TYPE_WEAPON)) 
+				g.drawString(d.inventory.getEquipment(Item.TYPE_WEAPON).getName(), offsetx+200, offsety+20);
+			else 
+				g.drawString("---", offsetx+200, offsety+20);
+			if (d.inventory.hasEquipped(Item.TYPE_ARMOR)) 
+				g.drawString(d.inventory.getEquipment(Item.TYPE_ARMOR).getName(), offsetx+200, offsety+60);
+			else 
+				g.drawString("---", offsetx+200, offsety+60);
+			
+			
+			
+			g.setFont(new Font("Arial", Font.PLAIN, 15));
+			for (int i = 0; i<=d.inventory.items.size(); i++) {
+				offsety+=20;
+				if (i==d.selectionIndex) g.drawString("->", offsetx-20, offsety);
+				if (i<d.inventory.items.size()) {
+				g.drawString(d.inventory.items.get(i).getName(), offsetx, offsety);
+				}
+				else g.drawString("Inventar schließen", offsetx, offsety);
 							
 			}
 			

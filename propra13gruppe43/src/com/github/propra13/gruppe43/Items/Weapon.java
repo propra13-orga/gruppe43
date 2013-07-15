@@ -6,7 +6,9 @@ import com.github.propra13.gruppe43.Actor;
 import com.github.propra13.gruppe43.DamageTypes;
 import com.github.propra13.gruppe43.Field;
 import com.github.propra13.gruppe43.Projectile;
-
+/**
+ * Klasse für Waffen-Gegenstände.
+ */
 public class Weapon extends Item {
 	//Menge an Schaden, die diese Waffe verursacht
 	int damage;
@@ -52,16 +54,16 @@ public class Weapon extends Item {
 	
 	//wird ausgelöst wenn Actor a  das Feld t mit dieser Waffe angreift, aus der Richtung des Vektors (facex, facey)
 		public void onHit(Actor a, Field t, int facex, int facey) {
-			if (a != null && t != null) {
-					if (t.isOccupied()) a.dealDamage(t.getActor(), damage, DamageTypes.PHYSICAL);
 					switch (id) {
 					case ID_SWORD:
 					case ID_AXE:
-						new Effect(t, Effect.SLASH);
+						if (a != null && t != null) 
+							new Effect(a, t, Effect.SLASH, damage, DamageTypes.PHYSICAL);
+						
 						break;
 					default:
 					break;
 				}
 			}
-		}
-}
+	}
+

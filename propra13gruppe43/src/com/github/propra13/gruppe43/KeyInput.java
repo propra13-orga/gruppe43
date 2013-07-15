@@ -7,8 +7,8 @@ public class KeyInput implements KeyListener{
 	//Ziel, das durch die Tasten angesteuert wird
 	KeyInterface target;
 	//das Array keypress enthält, welche Tasten gedrückt sind
-	boolean[] keypress = new boolean[11];
-	String[] inputStrings = {"up","left","down","right","q","w","e","r","a","s","space"};
+	boolean[] keypress = new boolean[13];
+	String[] inputStrings = {"up","left","down","right","q","w","e","r","a","s", "space", "i", "d"};
 	
 	
 	public KeyInput(KeyInterface k) {
@@ -31,6 +31,8 @@ public class KeyInput implements KeyListener{
 		if (!keypress[8] && b == KeyEvent.VK_A) { target.pressed("a"); keypress[8] = true; }
 
 		if (!keypress[10] && b == KeyEvent.VK_SPACE) { target.pressed("space"); keypress[10] = true; }
+		if (!keypress[11] && b == KeyEvent.VK_I) { target.pressed("i"); keypress[11] = true; }
+		if (!keypress[12] && b == KeyEvent.VK_D) { target.pressed("d"); keypress[12] = true; }
 		
 	}
 
@@ -50,7 +52,10 @@ public class KeyInput implements KeyListener{
 
 
 		if (keypress[8] && b == KeyEvent.VK_A) { target.released("a"); keypress[8] = false; }
+		
 		if (keypress[10] && b == KeyEvent.VK_SPACE) { target.released("space"); keypress[10] = false; }
+		if (keypress[11] && b == KeyEvent.VK_I) { target.released("i"); keypress[11] = false; }
+		if (keypress[12] && b == KeyEvent.VK_D) { target.released("d"); keypress[12] = false; }
 	}
 	
 	

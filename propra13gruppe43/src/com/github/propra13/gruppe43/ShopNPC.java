@@ -1,5 +1,7 @@
 package com.github.propra13.gruppe43;
 
+import com.github.propra13.gruppe43.Dialogs.Dialog;
+
 public class ShopNPC extends Actor {
 	String headline;
 	public ShopNPC (String hl) {

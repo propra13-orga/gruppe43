@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import com.github.propra13.gruppe43.Actor;
 import com.github.propra13.gruppe43.Field;
-
+/**
+ * Klasse für das Inventar eines Actors. Sie verwaltet die Liste aller Items des Actors und 
+ * kann Items aufnehmen, ablegen und ausrüsten.  
+ */
 
 public class Inventory {
 	//Actor, der dieses Inventar besitzt
@@ -60,14 +63,16 @@ public class Inventory {
 	public void pickup(Item i, boolean p) {
 		items.add(i);
 		if (p) {
-		if (i.type < EQSLOTS)  equipItem(i);
+		if ((i.type < EQSLOTS) && equipment[i.type] == null)  equipItem(i);
 		i.onPickup(actor);
 		}
 	}
 	
 	public void pickup(Item i) { pickup(i, true); }
-	//bewegt alle Items auf dem Feld t ins Inventar
-	
+	/**
+	 * Nimmt alle Items, die sich auf einem Feld befinden, ins Inventar auf.
+	 * @param t Zielfeld.
+	 */
 	public void pickupItems(Field t) {
 		if (pickup) {
 			ArrayList<Item> i = t.getItems();
@@ -78,8 +83,15 @@ public class Inventory {
 		}
 	}
 	
+	public void drop(Item i, Field t) {
+		t.addItem(i);
+		items.remove(i);
+	}
 	
-	//lässt die Items im Inventar auf das Feld t fallen, sofern erlaubt
+	/**
+	 * Sofern erlaubt, bewegt diese Methode alle Items aus diesem Inventar auf das Zielfeld.
+	 * @param t Zielfeld.
+	 */
 	public void dropItems(Field t) {
 		if (drop == 2) unequipAll();
 		if (drop != 0) {
@@ -90,8 +102,7 @@ public class Inventory {
 				t.addItem(g);
 			}
 			while (items.size() != 0) {
-				t.addItem(items.get(0));
-				items.remove(0);
+				drop(items.get(0), t);
 			}
 		 }
 	}

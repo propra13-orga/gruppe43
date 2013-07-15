@@ -4,7 +4,13 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import com.github.propra13.gruppe43.Items.Item;
-
+/**
+ * Die Klasse Field stellt einen einzelnen Block des Spielfeldes dar.
+ * Das Attribut 'type' gibt an,
+ * um welchen Feldtypen es sich handelt (z.B. Boden oder Wand).
+ * Ein Feld kann von maximal einem Actor eingenommen werden.
+ *
+ */
 public class Field {
 	
 	//Feldtypen

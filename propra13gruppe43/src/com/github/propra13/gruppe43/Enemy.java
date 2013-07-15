@@ -1,4 +1,7 @@
 package com.github.propra13.gruppe43;
+/**
+ * Die Klasse Enemy ist ein Actor, der einen Gegner im Spiel darstellt.
+ */
 
 public class Enemy extends Actor {
 	

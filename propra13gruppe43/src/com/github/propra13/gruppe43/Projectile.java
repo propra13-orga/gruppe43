@@ -94,7 +94,7 @@ public class Projectile {
 			if (field.isOccupied() && field.getActor() != owner) owner.dealDamage(field.getActor(), damage, dType);
 			switch (type) {
 			case FIREBALL:
-				new Effect(field, Effect.FIRE_SPLASH);
+				new Effect(owner, field, Effect.FIRE_SPLASH, 0, 0);
 				break;
 			default:
 				break;
